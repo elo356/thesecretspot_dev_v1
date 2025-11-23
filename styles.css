@@ -103,8 +103,10 @@ nav {
 
 /* Hero Section Moderno */
 .hero {
-    margin-top: 80px;
-    min-height: 90vh;
+    margin-top: 0;
+    /* Reserve space for the fixed header and make the hero fill the remaining viewport height */
+    padding-top: 80px; /* header height fallback */
+    min-height: calc(100vh - 80px);
     background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(51,51,51,0.6));
     display: flex;
     align-items: center;
@@ -148,6 +150,11 @@ nav {
     object-fit: cover;
     z-index: 0;
     pointer-events: none;
+}
+
+/* Ensure the video fills the hero including behind the header on small screens */
+@media (max-width: 768px) {
+    .hero { padding-top: 64px; min-height: calc(100vh - 64px); }
 }
 
 .hero h1 {
@@ -771,16 +778,18 @@ section {
 .staff-photo {
     width: 180px; /* larger so faces are clearer */
     height: 180px;
-    min-width: 140px;
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid var(--primary-color);
     box-shadow: var(--shadow);
+    display: inline-block;
+    flex: 0 0 auto;
 }
 .staff-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center center; /* center the face area by default */
     display: block;
     transition: transform 0.35s ease, filter 0.35s ease;
     filter: grayscale(0%);
@@ -1146,6 +1155,32 @@ footer {
     .nav-links a { padding: 0.5rem 0.6rem; font-size: 1rem; display: inline-block; }
 }
 
+/* Additional header/nav fixes for mobile visibility */
+@media (max-width: 900px) {
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0.45rem 1rem;
+        z-index: 2000;
+    }
+    nav {
+        align-items: center;
+        gap: 0.5rem;
+        display: flex;
+    }
+    .nav-links {
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        background: transparent;
+        z-index: 2100;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* Ensure links are readable on top of hero/video */
+    .nav-links a { color: var(--text-light); background: rgba(0,0,0,0); }
+}
+
 @media (max-width: 768px) {
     .hero h1 { font-size: 2rem; }
     .hero .subtitle { font-size: 1rem; }
@@ -1155,7 +1190,8 @@ footer {
     .services .service-category { padding: 0.5rem 0; }
     .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; }
     .team-photos { gap: 0.5rem; }
-    .team-photos .staff-photo { width: 72px; height: 72px; }
+    /* keep staff photos circular and readable on small screens */
+    .team-photos .staff-photo { width: 96px; height: 96px; }
     .about-image .image-frame, .team-group-photo .image-frame { max-width: 100%; }
     .image-frame img { display: block; width: 100%; height: auto; object-fit: cover; }
 }
