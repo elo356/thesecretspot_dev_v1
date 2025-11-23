@@ -396,6 +396,17 @@ section {
     .vision-mission { flex-direction: column; }
     .vm-card { align-items: flex-start; }
     .vm-icon { margin-bottom: 0.4rem; }
+
+    /* Make VM cards more visible on small screens */
+    .vision-mission { gap: 0.75rem; }
+    .vm-card {
+        background: #f7f7f7;
+        border: 1px solid rgba(0,0,0,0.09);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        padding: 1rem 1rem;
+        border-radius: 12px;
+    }
+    .vm-card h4 { font-size: 1rem; }
 }
 
 /* Badge "Desde 2019" */
@@ -978,20 +989,36 @@ section {
     filter: grayscale(0%);
 }
 
+/* Default layout for gift features (desktop/tablet) */
+.gift-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
 /* Responsive - Gift Section */
 @media (max-width: 768px) {
+    /* show two smaller boxes side-by-side on mobile */
     .gift-features {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
     }
-    
+
+    .feature-item {
+        padding: 0.6rem;
+        border-radius: 10px;
+    }
+
+    .feature-item h4 { font-size: 0.98rem; }
+
+    .feature-item p { font-size: 0.9rem; }
+
     .gift-cta {
-        padding: 1.5rem;
+        padding: 1rem;
     }
-    
-    .gift-cta div {
-        flex-direction: column;
-    }
+
+    .gift-cta-actions { flex-direction: column; gap: 0.5rem; }
 }
 
 /* Footer */
