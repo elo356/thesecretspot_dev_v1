@@ -515,96 +515,120 @@ section {
     border: 1px solid var(--secondary-color);
 }
 
-/* Contacto */
-.contact {
+/* Con.contact-modern {
+    padding: 4rem 0;
     background: var(--bg-light);
 }
 
-.contact-content {
+.contact-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.1fr 1fr;
     gap: 4rem;
+    align-items: flex-start;
 }
 
-.contact-info {
-    animation: fadeInLeft 1s ease;
-}
-
-.info-item {
+/* ---- COLUMNA DE INFO ---- */
+.info-column {
     display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: var(--secondary-color);
-    color: var(--primary-color);
-    border-radius: 15px;
-    transition: var(--transition);
-    border: 2px solid var(--primary-color);
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.info-item:hover {
-    transform: translateX(10px);
-    box-shadow: var(--shadow);
+.info-row {
+    display: grid;
+    grid-template-columns: 45px auto;
+    gap: 1rem;
+    align-items: flex-start;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.info-row i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+/* MAPA */
+.map-modern {
+    width: 100%;
+    height: 260px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.15);
+}
+
+.map-modern iframe {
+    width: 100%;
+    height: 100%;
+    filter: grayscale(40%);
+}
+
+/* ---- RESERVAS ---- */
+.booking-column {
+    padding: 2.2rem;
+    background: var(--bg-gray);
+    border-radius: 22px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.booking-column h3 {
+    margin-bottom: 1rem;
+}
+
+.desc {
+    color: var(--text-gray);
+    margin-bottom: 2rem;
+}
+
+.book-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 1.2rem;
     background: var(--primary-color);
     color: var(--secondary-color);
-}
-
-.info-item:hover .info-icon {
-    color: var(--secondary-color);
-}
-
-.info-icon {
-    font-size: 2rem;
-    margin-right: 1.5rem;
-    color: var(--primary-color);
-    transition: color 0.3s ease;
-}
-
-.contact-form {
-    background: var(--bg-gray);
-    color: var(--primary-color);
-    padding: 2rem;
-    border-radius: 20px;
-    animation: fadeInRight 1s ease;
-    border: 2px solid var(--primary-color);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
+    border-radius: 12px;
     font-weight: 600;
-    color: var(--primary-color);
+    text-decoration: none;
+    transition: 0.25s;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid var(--primary-color);
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: var(--transition);
-    background: var(--secondary-color);
-    color: var(--primary-color);
+.book-btn:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
-    background: var(--secondary-color);
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
+/* Hint */
+.hint {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
     color: var(--text-gray);
+}
+
+/* ---- PAGOS ---- */
+.payment-modern {
+    margin-top: 2.5rem;
+}
+
+.payment-icons-modern {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.payment-icons-modern img {
+    width: 55px;
+    height: auto;
+    opacity: 0.8;
+    transition: 0.25s;
+}
+
+.payment-icons-modern img:hover {
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 /* Team Section */
