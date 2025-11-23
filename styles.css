@@ -1152,7 +1152,9 @@ footer {
         white-space: nowrap;
     }
     .nav-links li { display: inline-block; }
-    .nav-links a { padding: 0.5rem 0.6rem; font-size: 1rem; display: inline-block; }
+    .nav-links a { padding: 0.4rem 0.5rem; font-size: 0.9rem; display: inline-block; }
+    /* Hide Inicio on mobile so only Servicios/Nosotros/Galería/Contacto remain */
+    .nav-links a[href="#inicio"] { display: none; }
 }
 
 /* Additional header/nav fixes for mobile visibility */
