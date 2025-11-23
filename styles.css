@@ -575,6 +575,18 @@ section {
     border: 1px solid var(--secondary-color);
 }
 
+/* Remove gallery grayscale filter on small screens so images appear in color on mobile */
+@media (max-width: 768px) {
+    .gallery-item img {
+        filter: none !important;
+        transition: transform 0.25s ease;
+    }
+    .gallery-item:hover img {
+        filter: none !important;
+        transform: none !important;
+    }
+}
+
 /* Con.contact-modern {
     padding: 4rem 0;
     background: var(--bg-light);
