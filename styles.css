@@ -131,34 +131,32 @@ nav {
     100% { left: 100%; }
 }
 
-    .hero { padding-top: 64px; min-height: calc(100vh - 64px); }
-    .nav-links {
-        position: static;
-        top: auto;
-        right: auto;
-        left: auto;
-        background: transparent;
-        flex-direction: row;
-        gap: 0.12rem;
-        padding: 0.04rem 0.18rem;
-        transform: none;
-        transition: none;
-        z-index: auto;
-        display: flex;
-        justify-content: center;
-        flex-wrap: nowrap; /* do not wrap to next line */
-        overflow-x: hidden; /* hide overflow instead of showing scroll */
-        white-space: nowrap;
-    }
-    .nav-links li { display: inline-block; }
-    .nav-links a { padding: 0.06rem 0.18rem; font-size: 0.58rem; display: inline-block; }
-    .nav-links { gap: 0.12rem; }
-    /* Hide Inicio and Galería on mobile so only Servicios/Nosotros/Contacto remain */
-    .nav-links a[href="#inicio"],
-    .nav-links a[href="#galeria"] { display: none; }
+.hero-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 5%;
+    color: var(--text-light);
+    z-index: 2;
+    position: relative;
+}
 
-    /* hide any scrollbar if it appears on some browsers (visual only) */
-    .nav-links::-webkit-scrollbar { display: none; }
+/* Video dentro del hero (cubre todo el área) */
+.hero video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Ensure the video fills the hero including behind the header on small screens */
+@media (max-width: 768px) {
+    .hero { padding-top: 64px; min-height: calc(100vh - 64px); }
+}
+
 .hero h1 {
     font-size: 4rem;
     font-weight: 800;
@@ -751,9 +749,8 @@ section {
     height: auto; /* let the image scale naturally */
     max-height: 48vh; /* prevent it from becoming very tall */
     object-fit: contain; /* default: show whole image without cropping */
-    object-position: center center; /* focus on bottom center */
+    object-position: center 40%; /* focus on bottom center */
     display: block;
-    filter: grayscale(60%);
     transition: filter 0.45s ease, transform 0.45s ease;
 }
 .team-group-photo .image-frame img:hover {
@@ -791,7 +788,7 @@ section {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center center; /* center the face area by default */
+    object-position: center 20%; /* center the face area by default */
     display: block;
     transition: transform 0.35s ease, filter 0.35s ease;
     filter: grayscale(0%);
