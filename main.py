@@ -126,7 +126,7 @@ async def upload_hero_video(
     try:
         result = cloudinary.uploader.upload(
             file.file,
-            folder="thesecretspot/hero",
+            folder="thesecretspot/hero/api",
             resource_type="video"
         )
     except Exception as e:
@@ -142,7 +142,7 @@ async def upload_hero_video(
 # ---- IMÁGENES DE SECCIONES (SLOTS) ----
 VALID_SLOTS = set(DEFAULT_CONTENT["slots"].keys())
 
-@app.post("/api/slot-image")
+@app.post("/api/slot-image/api")
 async def upload_slot_image(
     slot_key: str = Form(...),
     file: UploadFile = File(...),
@@ -157,7 +157,7 @@ async def upload_slot_image(
     try:
         result = cloudinary.uploader.upload(
             file.file,
-            folder=f"thesecretspot/slots/{slot_key}",
+            folder=f"thesecretspot/slots/{slot_key}/api",
             resource_type="image"
         )
     except Exception as e:
