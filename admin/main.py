@@ -7,9 +7,9 @@ from pathlib import Path
 
 # ============ CONFIG CLOUDINARY ============
 cloudinary.config(
-    cloud_name="TU_CLOUD_NAME",
-    api_key="TU_API_KEY",
-    api_secret="TU_API_SECRET",
+    cloud_name="dnd427uub",
+    api_key="456318294928817",
+    api_secret="NH5awUrt2NriqWmgPZKk4To1gZY",
     secure=True
 )
 

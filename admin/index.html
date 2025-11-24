@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Panel del Cliente</title>
+</head>
+<body>
+
+<h2>Subir Imagen</h2>
+
+<select id="section">
+    <option value="galeria">Galería</option>
+</select>
+
+<br><br>
+
+<input type="file" id="file">
+<br><br>
+
+<button onclick="uploadImage()">Subir Imagen</button>
+
+<script>
+const API = "https://thesecretspot.onrender.com";
+
+async function uploadImage() {
+    const file = document.getElementById("file").files[0];
+    const section = document.getElementById("section").value;
+
+    if (!file) { alert("Selecciona un archivo"); return; }
+
+    const form = new FormData();
+    form.append("file", file);
+    form.append("section", section);
+
+    const res = await fetch(`${API}/upload-image`, {
+        method: "POST",
+        body: form
+    });
+
+    const json = await res.json();
+    alert("Imagen subida correctamente");
+}
+</script>
+
+</body>
+</html>
