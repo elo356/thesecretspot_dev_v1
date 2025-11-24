@@ -1397,8 +1397,9 @@ footer {
 
 @media (max-width: 768px) {
     .hero h1 { font-size: 2rem; }
-    .hero .subtitle { font-size: 1rem; }
-    .cta-buttons { flex-direction: column; gap: 0.6rem; }
+    .hero .subtitle { font-size: 1rem; margin-bottom: 1rem; }
+    .cta-buttons { flex-direction: column; gap: 0.5rem; align-items: center; }
+    .hero-content { padding: 0 3%; }
     .hero { min-height: 70vh; }
     .services-container { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
     .services .service-category { padding: 0.5rem 0; }
@@ -1408,6 +1409,8 @@ footer {
     .team-photos .staff-photo { width: 96px; height: 96px; }
     .about-image .image-frame, .team-group-photo .image-frame { max-width: 100%; }
     .image-frame img { display: block; width: 100%; height: auto; object-fit: cover; }
+    /* Remove any image filters on mobile so images display in full color */
+    img { filter: none !important; -webkit-filter: none !important; }
     /* Keep language toggle compact and inline with nav links on small screens */
     .nav-links { gap: 0.5rem; align-items: center; flex-wrap: nowrap; }
     .nav-links li { min-width: 0; }
@@ -1415,6 +1418,19 @@ footer {
     .lang-toggle { padding: 4px 8px; font-size: 0.85rem; border-radius: 6px; gap: 4px; }
     .lang-toggle i.fas { font-size: 0.95em; }
     .lang-toggle .chevron { display: inline-block; }
+    /* Make hero CTA buttons smaller and keep pill style */
+    .cta-buttons .btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: auto;
+        max-width: 360px;
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+        border-radius: 50px; /* preserve pill shape */
+    }
+    .cta-buttons { width: 100%; display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+    .cta-buttons .btn i { margin-right: 8px; }
 }
 
 @media (max-width: 420px) {
@@ -1424,4 +1440,11 @@ footer {
     /* Further shrink language toggle on very small screens */
     .lang-toggle { padding: 3px 6px; font-size: 0.7rem; gap: 4px; }
     .lang-toggle i.fas { font-size: 0.85em; }
+    /* Tighter CTA for very small screens, keep pill shape */
+    .cta-buttons .btn {
+        max-width: 280px;
+        padding: 0.5rem 0.9rem;
+        font-size: 0.85rem;
+        border-radius: 50px;
+    }
 }
