@@ -1,8 +1,6 @@
 # main.py
 from fastapi import FastAPI, File, UploadFile, HTTPException, Depends, Header, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Optional, Dict
 from uuid import uuid4
@@ -20,17 +18,6 @@ cloudinary.config(
     api_secret=os.environ.get("CLOUDINARY_APISECRET"),
     secure=True
 )
-
-# Decide whether to use Cloudinary or fall back to local file storage
-USE_CLOUDINARY = bool(
-    os.environ.get("CLOUDINARY_CLOUDNAME") and
-    os.environ.get("CLOUDINARY_APIKEY") and
-    os.environ.get("CLOUDINARY_APISECRET")
-)
-
-UPLOADS_DIR = BASE_DIR / "uploads"
-UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
-
 
 # ============ SEGURIDAD (TOKEN API) ============
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "123456")  # cambia esto en Render
@@ -113,17 +100,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve uploaded files when using local storage
-app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
-
-# Serve admin panel page
-@app.get("/panel", response_class=HTMLResponse)
-def serve_panel():
-    panel_path = BASE_DIR / "panel.html"
-    if not panel_path.exists():
-        return HTMLResponse("<h1>Panel no encontrado</h1>", status_code=404)
-    return HTMLResponse(panel_path.read_text(encoding="utf-8"))
-
 # ============ ENDPOINTS ============
 
 @app.get("/api/content", response_model=ContentResponse)
@@ -146,35 +122,26 @@ async def upload_hero_video(
 ):
     if not file:
         raise HTTPException(status_code=400, detail="No file uploaded")
-    # If Cloudinary is configured, upload there. Otherwise save locally to /uploads
-    if USE_CLOUDINARY:
-        try:
-            result = cloudinary.uploader.upload(
-                file.file,
-                folder="thesecretspot/hero/api",
-                resource_type="video"
-            )
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Cloudinary error: {e}")
-        url = result["secure_url"]
-        public_id = result.get("public_id")
-    else:
-        # save locally
-        contents = await file.read()
-        fname = f"{uuid4().hex}_{file.filename}"
-        out_path = UPLOADS_DIR / fname
-        with open(out_path, "wb") as out:
-            out.write(contents)
-        url = f"/uploads/{fname}"
-        public_id = str(fname)
+
+    try:
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder="thesecretspot/hero",
+            resource_type="video"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloudinary error: {e}")
+
+    url = result["secure_url"]
     data = load_content()
     data["heroVideo"] = url
     save_content(data)
 
-    return {"url": url, "public_id": public_id, "message": "Hero video actualizado"}
+    return {"url": url, "message": "Hero video actualizado"}
 
 # ---- IMÁGENES DE SECCIONES (SLOTS) ----
 VALID_SLOTS = set(DEFAULT_CONTENT["slots"].keys())
+
 @app.post("/api/slot-image")
 async def upload_slot_image(
     slot_key: str = Form(...),
@@ -187,38 +154,22 @@ async def upload_slot_image(
     if not file:
         raise HTTPException(status_code=400, detail="No file uploaded")
 
-    # Upload to Cloudinary or save locally
-    if USE_CLOUDINARY:
-        try:
-            result = cloudinary.uploader.upload(
-                file.file,
-                folder=f"thesecretspot/slots/{slot_key}/api",
-                resource_type="image"
-            )
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Cloudinary error: {e}")
-        url = result["secure_url"]
-        public_id = result.get("public_id")
-    else:
-        contents = await file.read()
-        fname = f"{uuid4().hex}_{file.filename}"
-        out_path = UPLOADS_DIR / fname
-        with open(out_path, "wb") as out:
-            out.write(contents)
-        url = f"/uploads/{fname}"
-        public_id = str(fname)
+    try:
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder=f"thesecretspot/slots/{slot_key}",
+            resource_type="image"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloudinary error: {e}")
+
+    url = result["secure_url"]
 
     data = load_content()
     data["slots"][slot_key] = url
     save_content(data)
 
-    return {
-        "slot_key": slot_key,
-        "url": url,
-        "public_id": public_id,
-        "message": "Imagen de sección actualizada"
-    }
-
+    return {"slot_key": slot_key, "url": url, "message": "Imagen de sección actualizada"}
 
 # ---- GALERÍA ----
 @app.get("/api/gallery", response_model=List[GalleryItem])
@@ -238,30 +189,19 @@ async def upload_gallery_image(
     if category not in ["damas", "caballeros", "ninos", "manicura", "pedicura"]:
         raise HTTPException(status_code=400, detail="Categoría inválida")
 
-    if USE_CLOUDINARY:
-        try:
-            result = cloudinary.uploader.upload(
-                file.file,
-                folder=f"thesecretspot/gallery/{category}",
-                resource_type="image"
-            )
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Cloudinary error: {e}")
-        url = result["secure_url"]
-        public_id = result.get("public_id")
-    else:
-        contents = await file.read()
-        fname = f"{uuid4().hex}_{file.filename}"
-        out_path = UPLOADS_DIR / fname
-        with open(out_path, "wb") as out:
-            out.write(contents)
-        url = f"/uploads/{fname}"
-        public_id = str(fname)
+    try:
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder=f"thesecretspot/gallery/{category}",
+            resource_type="image"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cloudinary error: {e}")
 
     item = {
         "id": str(uuid4()),
-        "url": url,
-        "public_id": public_id,
+        "url": result["secure_url"],
+        "public_id": result["public_id"],
         "category": category
     }
 
@@ -283,16 +223,7 @@ def delete_gallery_image(item_id: str, token: str = Depends(verify_token)):
 
     # borrar en Cloudinary
     try:
-        if USE_CLOUDINARY:
-            cloudinary.uploader.destroy(item["public_id"])
-        else:
-            # eliminar archivo local
-            local_path = UPLOADS_DIR / item.get("public_id", "")
-            if local_path.exists():
-                try:
-                    local_path.unlink()
-                except Exception:
-                    pass
+        cloudinary.uploader.destroy(item["public_id"])
     except Exception:
         # no romper si falla
         pass
