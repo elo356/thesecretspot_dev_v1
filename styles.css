@@ -1408,10 +1408,20 @@ footer {
     .team-photos .staff-photo { width: 96px; height: 96px; }
     .about-image .image-frame, .team-group-photo .image-frame { max-width: 100%; }
     .image-frame img { display: block; width: 100%; height: auto; object-fit: cover; }
+    /* Keep language toggle compact and inline with nav links on small screens */
+    .nav-links { gap: 0.5rem; align-items: center; flex-wrap: nowrap; }
+    .nav-links li { min-width: 0; }
+    .lang-dropdown { flex: 0 0 auto; }
+    .lang-toggle { padding: 4px 8px; font-size: 0.85rem; border-radius: 6px; gap: 4px; }
+    .lang-toggle i.fas { font-size: 0.95em; }
+    .lang-toggle .chevron { display: inline-block; }
 }
 
 @media (max-width: 420px) {
     .hero h1 { font-size: 1.6rem; }
     .nav-links a { font-size: 0.66rem; padding: 0.12rem 0.3rem; }
     .nav-links { gap: 0.18rem; }
+    /* Further shrink language toggle on very small screens */
+    .lang-toggle { padding: 3px 6px; font-size: 0.7rem; gap: 4px; }
+    .lang-toggle i.fas { font-size: 0.85em; }
 }
