@@ -83,23 +83,7 @@
             </div>
         </div>
     </section>
-<div id="galeria"></div>
 
-<script>
-async function cargarImagenes() {
-    const res = await fetch("https://thesecretspot.onrender.com/content");
-    const data = await res.json();
-
-    const cont = document.getElementById("galeria");
-    cont.innerHTML = "";
-
-    data.galeria.forEach(url => {
-        cont.innerHTML += `<img src="${url}" style="width:200px;margin:5px;">`;
-    });
-}
-
-cargarImagenes();
-</script>
         <script>
         (function(){
             const video = document.getElementById('hero-video');
@@ -1186,4 +1170,71 @@ filterButtons.forEach(button => {
             headerEl.classList.toggle('nav-open');
         }
     </script>
+    <script>
+const API = "https://thesecretspot.onrender.com";
+
+async function cargarContenido() {
+    const res = await fetch(`${API}/content`);
+    const data = await res.json();
+
+    // ========== 1. VIDEO DEL HEADER ==========
+    if (data.header_video) {
+        const video = document.getElementById("hero-video");
+        if (video) {
+            video.innerHTML = `
+                <source src="${data.header_video}" type="video/mp4">
+            `;
+            video.load();
+        }
+    }
+
+    // ========== 2. SERVICIOS (4 IMÁGENES) ==========
+    const serviciosImgs = document.querySelectorAll(".servicios-imagenes .img-box img");
+    data.servicios.slice(0, 4).forEach((url, i) => {
+        if (serviciosImgs[i]) serviciosImgs[i].src = url;
+    });
+
+    // ========== 3. SOBRE NOSOTROS ==========
+    if (data.sobre_nosotros) {
+        const img = document.querySelector(".about-image img");
+        if (img) img.src = data.sobre_nosotros;
+    }
+
+    // ========== 4. FOTO GRUPAL ==========
+    if (data.foto_grupal) {
+        const img = document.querySelector(".team-group-photo img");
+        if (img) img.src = data.foto_grupal;
+    }
+
+    // ========== 5. EQUIPO (6 IMÁGENES) ==========
+    const equipoImgs = document.querySelectorAll(".team-photos .staff-photo img");
+    data.equipo.slice(0, 6).forEach((url, i) => {
+        if (equipoImgs[i]) equipoImgs[i].src = url;
+    });
+
+    // ========== 6. GALERÍA DINÁMICA ==========
+    const galeriaContainer = document.querySelector(".gallery-grid");
+    if (galeriaContainer) galeriaContainer.innerHTML = "";
+
+    data.galeria.forEach(item => {
+        galeriaContainer.innerHTML += `
+            <div class="gallery-item" data-category="${item.categoria}">
+                <span class="gallery-category">${item.categoria}</span>
+                <img src="${item.url}" loading="lazy">
+                <div class="gallery-overlay">
+                    <div>
+                        <h4>${item.categoria}</h4>
+                        <p>Trabajo - ${item.categoria}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// Cargar todo al entrar a la web
+cargarContenido();
+</script>
+
+</body>
 </html>
