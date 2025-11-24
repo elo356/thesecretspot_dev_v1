@@ -150,19 +150,35 @@ nav {
     object-fit: cover;
     z-index: 0;
     pointer-events: none;
+
 }
 
-/* Mobile: avoid header covering hero by pushing the hero down; keep video filling the hero box */
+/* Ensure the video fills the hero including behind the header on small screens */
 @media (max-width: 768px) {
-    /* push the hero below the fixed header so it is not visually covered */
-    .hero { margin-top: 64px; min-height: calc(100vh - 64px); }
-    /* keep the video positioned at the top of the hero (no absolute shift) */
-    .hero video { top: 0; height: 100%; object-position: center 55%; }
+    .hero { padding-top: 64px; min-height: calc(100vh - 64px); }
+    /* Move video down so fixed header doesn't cover it */
+    .hero video {
+        top: 64px;
+        height: calc(100% - 64px);
+        object-position: center 60%;
+    }
+}
+
+/* Ajuste del encuadre del video en móviles: bajar la vista para que no se corte la parte superior */
+@media (max-width: 768px) {
+    .hero video {
+        /* prueba con 60% para bajar el encuadre; aumenta para mostrar más parte inferior */
+        object-position: center 60%;
+    }
 }
 
 @media (max-width: 480px) {
-    .hero { margin-top: 64px; min-height: calc(100vh - 64px); }
-    .hero video { top: 0; height: 100%; object-position: center 65%; }
+    .hero video {
+        /* más abajo en pantallas muy pequeñas */
+        top: 64px;
+        height: calc(100% - 64px);
+        object-position: center 72%;
+    }
 }
 
 .hero h1 {
@@ -267,31 +283,30 @@ section {
 
 /* Columna de imágenes */
 .servicios-imagenes {
-  flex: 1;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr 1fr;
+    flex: 1;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto; /* allow aspect-ratio to control height */
 }
 
 .img-box {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    height: auto;
+    aspect-ratio: 1 / 1; /* force square */
 }
 
-.img-box.grande {
-  grid-column: span 2;
-  height: 280px;
-}
-
-.img-box.small {
-  height: 180px;
-}
+/* Neutralize previous size-specific classes so all boxes remain equal */
+.img-box.grande,
+.img-box.small,
+.img-box.grande-bottom { grid-column: auto; height: auto; aspect-ratio: 1 / 1; }
 
 .img-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Lista de servicios */
@@ -327,9 +342,11 @@ section {
     flex-direction: column;
   }
 
-  .img-box.grande {
-    height: 240px;
-  }
+    /* Keep servicio boxes square on small screens as well */
+    .img-box {
+        aspect-ratio: 1 / 1;
+        height: auto;
+    }
 }
 
 /* Sobre Nosotros */
@@ -734,6 +751,8 @@ section {
 .team .team-group-photo .image-frame,
 .team .staff-photo {
     border-color: rgba(255,255,255,0.12);
+    margin-top: 30px;
+    margin-bottom: 50px;
 }
 
 .team-hero img:hover {
@@ -853,9 +872,10 @@ section {
     height: auto; /* let the image scale naturally */
     max-height: 48vh; /* prevent it from becoming very tall */
     object-fit: contain; /* default: show whole image without cropping */
-    object-position: center 40%; /* focus on bottom center */
+    object-position: center 30%; /* focus on bottom center */
     display: block;
     transition: filter 0.45s ease, transform 0.45s ease;
+    
 }
 .team-group-photo .image-frame img:hover {
     filter: grayscale(0%);
@@ -924,7 +944,7 @@ section {
     }
     .team-group-photo .image-frame img {
         width: 100%;
-        height: 260px; /* fixed height on mobile for consistent look */
+        height: 300px; /* fixed height on mobile for consistent look */
         max-height: none;
         object-fit: cover; /* fill the frame without leaving gaps */
         display: block;
