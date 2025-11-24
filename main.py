@@ -20,7 +20,7 @@ cloudinary.config(
 )
 
 # ============ SEGURIDAD (TOKEN API) ============
-ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "srv-d4ht2sili9vc73edtja0")  # cambia esto en Render
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "123456")  # cambia esto en Render
 
 def verify_token(authorization: str = Header(...)):
     expected = f"Bearer {ADMIN_TOKEN}"
