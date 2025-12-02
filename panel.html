@@ -241,18 +241,30 @@
             <div class="preview-list" id="galeriaPreview"></div>
         </section>
     </div>
-</main>
-<script>
+</main><script>
 if (!localStorage.getItem("panel_token")) {
-    window.location.href = "login.html"; // redirige si no está logueado
+    window.location.href = "login.html"; 
 }
-</script>
 
-<script>
 const API = "https://internal-api.ladiesandmengrooming.com";
+const TOKEN = localStorage.getItem("panel_token");
 
+// ==============================================
+// HELPERS
+// ==============================================
+function setStatus(msg) {
+    document.getElementById("status").textContent = msg;
+}
 
+async function authorizedFetch(url, options = {}) {
+    options.headers = options.headers || {};
+    options.headers["Authorization"] = TOKEN; 
+    return fetch(url, options);
+}
 
+// ==============================================
+// CARGAR CONTENIDO
+// ==============================================
 let state = {
     header_video: "",
     servicios: [],
@@ -262,95 +274,48 @@ let state = {
     galeria: []
 };
 
-let currentGalleryFilter = "all";
-
-// ================== UTILIDADES ===================
-function setStatus(msg) {
-    document.getElementById("status").textContent = msg;
-}
-
-// Carga inicial de contenido
 async function fetchContent() {
     try {
         setStatus("Cargando contenido...");
-        const res = await fetch(`${API}/content`);
-        if (!res.ok) throw new Error("Error al obtener contenido");
+        const res = await authorizedFetch(`${API}/content`);
+        if (!res.ok) throw new Error("No se pudo obtener el contenido");
+
         state = await res.json();
-        setStatus("Contenido cargado.");
         renderAll();
+        setStatus("Contenido cargado.");
     } catch (err) {
         console.error(err);
         setStatus("Error cargando contenido.");
     }
 }
 
-// Render de todo
-function renderAll() {
-    renderHeaderVideo();
-    renderSobreNosotros();
-    renderFotoGrupal();
-    renderServicios();
-    renderEquipo();
-    renderGaleria();
-}
-
-// ================== HEADER VIDEO ===================
-function renderHeaderVideo() {
-    const preview = document.getElementById("headerVideoPreview");
-    preview.innerHTML = "";
-
-    if (state.header_video) {
-        preview.innerHTML = `
-            <video src="${state.header_video}" controls style="width:100%; max-width:400px; border-radius:6px;"></video>
-        `;
-    }
-}
-
-
-async function saveHeaderVideo() {
-    const url = document.getElementById("headerVideoUrl").value.trim();
-    if (!url) {
-        alert("Introduce una URL de video");
-        return;
-    }
-    try {
-        setStatus("Guardando video de header...");
-        const form = new FormData();
-        form.append("video_url", url);
-        const res = await fetch(`${API}/update-header-video`, {
-            method: "POST",
-            body: form
-        });
-        if (!res.ok) throw new Error("Error al guardar video");
-        await fetchContent();
-        alert("Video actualizado");
-    } catch (err) {
-        console.error(err);
-        alert("Error al guardar el video");
-        setStatus("Error al guardar el video.");
-    }
-}
-
-// ================== SUBIR IMÁGENES GENERALES ===================
+// ==============================================
+// SUBIDA DE IMÁGENES
+// ==============================================
 async function uploadImage(section, fileInputId) {
     const input = document.getElementById(fileInputId);
     const file = input.files[0];
-    if (!file) {
-        alert("Selecciona un archivo");
-        return;
-    }
+    if (!file) return alert("Selecciona un archivo");
 
     const form = new FormData();
     form.append("section", section);
     form.append("file", file);
 
+    // enviar categoria vacía siempre (FastAPI lo requiere)
+    form.append("categoria", "");
+
     try {
         setStatus("Subiendo imagen...");
-        const res = await fetch(`${API}/upload-image`, {
+        const res = await authorizedFetch(`${API}/upload-image`, {
             method: "POST",
             body: form
         });
-        if (!res.ok) throw new Error("Error subiendo imagen");
+
+        if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err);
+        }
+
         input.value = "";
         await fetchContent();
         alert("Imagen subida correctamente");
@@ -363,203 +328,158 @@ async function uploadImage(section, fileInputId) {
 
 async function uploadVideo() {
     const file = document.getElementById("videoHeaderFile").files[0];
-
-    if (!file) {
-        alert("Selecciona un archivo de video");
-        return;
-    }
+    if (!file) return alert("Selecciona un video");
 
     const form = new FormData();
     form.append("file", file);
 
-    const res = await fetch(`${API}/upload-video`, {
-        method: "POST",
-        body: form
-    });
+    try {
+        setStatus("Subiendo video...");
 
-    const json = await res.json();
+        const res = await authorizedFetch(`${API}/upload-video`, {
+            method: "POST",
+            body: form
+        });
 
-    alert("Video subido correctamente");
-    fetchContent(); // recargar el panel
+        if (!res.ok) throw new Error("Error subiendo video");
+
+        alert("Video subido correctamente");
+        fetchContent();
+    } catch {
+        alert("Error subiendo el video");
+    }
 }
-function logout() {
-    localStorage.removeItem("panel_token");
-    window.location.href = "login.html";
-}
 
+// ==============================================
+// ELIMINAR IMAGEN
+// ==============================================
 async function deleteImage(section, url) {
     if (!confirm("¿Eliminar esta imagen?")) return;
 
     try {
-        setStatus("Eliminando imagen...");
-        const res = await fetch(`${API}/delete-image?section=${encodeURIComponent(section)}&url=${encodeURIComponent(url)}`, {
-            method: "DELETE"
-        });
-        if (!res.ok) throw new Error("Error eliminando imagen");
+        setStatus("Eliminando...");
+
+        const res = await authorizedFetch(
+            `${API}/delete-image?section=${encodeURIComponent(section)}&url=${encodeURIComponent(url)}`,
+            { method: "DELETE" }
+        );
+
+        if (!res.ok) throw new Error("Error eliminando");
+
         await fetchContent();
-        alert("Imagen eliminada");
-    } catch (err) {
-        console.error(err);
-        alert("Error al eliminar la imagen");
-        setStatus("Error al eliminar la imagen.");
+        alert("Eliminada correctamente");
+    } catch {
+        alert("Error al eliminar");
     }
 }
 
-// ================== RENDERS POR SECCIÓN ===================
+// ==============================================
+// RENDERIZADOS
+// ==============================================
+function renderAll() {
+    renderHeaderVideo();
+    renderSobreNosotros();
+    renderFotoGrupal();
+    renderServicios();
+    renderEquipo();
+    renderGaleria();
+}
+
+function renderHeaderVideo() {
+    const p = document.getElementById("headerVideoPreview");
+    p.innerHTML = state.header_video
+        ? `<video src="${state.header_video}" controls style="width:100%;max-width:400px;border-radius:6px;"></video>`
+        : "";
+}
+
 function renderSobreNosotros() {
-    const container = document.getElementById("sobreNosotrosPreview");
-    container.innerHTML = "";
+    const c = document.getElementById("sobreNosotrosPreview");
+    c.innerHTML = "";
     if (!state.sobre_nosotros) return;
 
-    const url = state.sobre_nosotros;
-    const item = document.createElement("div");
-    item.className = "preview-item";
-    item.innerHTML = `
-        <img src="${url}" alt="Sobre nosotros">
-        <div class="actions">
-            <button class="secondary" onclick="deleteImage('sobre_nosotros', '${url}')">Eliminar</button>
-        </div>
-    `;
-    container.appendChild(item);
+    c.innerHTML = `
+        <div class="preview-item">
+            <img src="${state.sobre_nosotros}">
+            <div class="actions">
+                <button class="secondary" onclick="deleteImage('sobre_nosotros', '${state.sobre_nosotros}')">Eliminar</button>
+            </div>
+        </div>`;
 }
 
 function renderFotoGrupal() {
-    const container = document.getElementById("fotoGrupalPreview");
-    container.innerHTML = "";
+    const c = document.getElementById("fotoGrupalPreview");
+    c.innerHTML = "";
     if (!state.foto_grupal) return;
 
-    const url = state.foto_grupal;
-    const item = document.createElement("div");
-    item.className = "preview-item";
-    item.innerHTML = `
-        <img src="${url}" alt="Foto grupal">
-        <div class="actions">
-            <button class="secondary" onclick="deleteImage('foto_grupal', '${url}')">Eliminar</button>
-        </div>
-    `;
-    container.appendChild(item);
+    c.innerHTML = `
+        <div class="preview-item">
+            <img src="${state.foto_grupal}">
+            <div class="actions">
+                <button class="secondary" onclick="deleteImage('foto_grupal', '${state.foto_grupal}')">Eliminar</button>
+            </div>
+        </div>`;
 }
 
 function renderServicios() {
-    const container = document.getElementById("serviciosPreview");
-    container.innerHTML = "";
-    (state.servicios || []).forEach(url => {
-        const item = document.createElement("div");
-        item.className = "preview-item";
-        item.innerHTML = `
-            <img src="${url}" alt="Servicio">
-            <small>Servicio</small>
-            <div class="actions">
-                <button class="secondary" onclick="deleteImage('servicios', '${url}')">Eliminar</button>
-            </div>
-        `;
-        container.appendChild(item);
+    const c = document.getElementById("serviciosPreview");
+    c.innerHTML = "";
+    state.servicios.forEach(url => {
+        c.innerHTML += `
+            <div class="preview-item">
+                <img src="${url}">
+                <div class="actions">
+                    <button class="secondary" onclick="deleteImage('servicios', '${url}')">Eliminar</button>
+                </div>
+            </div>`;
     });
 }
 
 function renderEquipo() {
-    const container = document.getElementById("equipoPreview");
-    container.innerHTML = "";
-    (state.equipo || []).forEach(url => {
-        const item = document.createElement("div");
-        item.className = "preview-item";
-        item.innerHTML = `
-            <img src="${url}" alt="Equipo">
-            <small>Integrante</small>
-            <div class="actions">
-                <button class="secondary" onclick="deleteImage('equipo', '${url}')">Eliminar</button>
-            </div>
-        `;
-        container.appendChild(item);
+    const c = document.getElementById("equipoPreview");
+    c.innerHTML = "";
+    state.equipo.forEach(url => {
+        c.innerHTML += `
+            <div class="preview-item">
+                <img src="${url}">
+                <div class="actions">
+                    <button class="secondary" onclick="deleteImage('equipo', '${url}')">Eliminar</button>
+                </div>
+            </div>`;
     });
-}
-
-// ================== GALERÍA ===================
-async function uploadGaleria() {
-    const fileInput = document.getElementById("galeriaFile");
-    const categoriaInput = document.getElementById("galeriaCategoria");
-
-    const file = fileInput.files[0];
-    const categoria = categoriaInput.value.trim();
-
-    if (!file) {
-        alert("Selecciona una imagen");
-        return;
-    }
-    if (!categoria) {
-        alert("Introduce una categoría");
-        return;
-    }
-
-    const form = new FormData();
-    form.append("section", "galeria");
-    form.append("file", file);
-    form.append("categoria", categoria);
-
-    try {
-        setStatus("Subiendo imagen a la galería...");
-        const res = await fetch(`${API}/upload-image`, {
-            method: "POST",
-            body: form
-        });
-        if (!res.ok) throw new Error("Error subiendo imagen a galería");
-        fileInput.value = "";
-        categoriaInput.value = "";
-        await fetchContent();
-        alert("Imagen de galería subida");
-    } catch (err) {
-        console.error(err);
-        alert("Error al subir la imagen de galería");
-        setStatus("Error al subir la imagen de galería.");
-    }
 }
 
 function renderGaleria() {
-    const selectFilter = document.getElementById("galeriaFilter");
-    const container = document.getElementById("galeriaPreview");
-    container.innerHTML = "";
+    const c = document.getElementById("galeriaPreview");
+    const select = document.getElementById("galeriaFilter");
 
-    // Llenar select de categorías
-    const categorias = Array.from(new Set(
-        (state.galeria || []).map(img => img.categoria).filter(Boolean)
-    ));
+    c.innerHTML = "";
+    select.innerHTML = `<option value="all">Todas</option>`;
 
-    // Mantener valor actual si existe
-    const prevValue = selectFilter.value || "all";
-    selectFilter.innerHTML = `<option value="all">Todas</option>`;
+    const categorias = [...new Set(state.galeria.map(g => g.categoria))];
+
     categorias.forEach(cat => {
-        const opt = document.createElement("option");
-        opt.value = cat;
-        opt.textContent = cat;
-        selectFilter.appendChild(opt);
+        select.innerHTML += `<option value="${cat}">${cat}</option>`;
     });
-    selectFilter.value = prevValue;
-    currentGalleryFilter = selectFilter.value;
 
-    // Filtrar imágenes
-    let images = state.galeria || [];
-    if (currentGalleryFilter !== "all") {
-        images = images.filter(img => img.categoria === currentGalleryFilter);
-    }
+    const filtro = select.value;
+    const images = filtro === "all"
+        ? state.galeria
+        : state.galeria.filter(g => g.categoria === filtro);
 
     images.forEach(img => {
-        const url = img.url;
-        const cat = img.categoria || "Sin categoría";
-        const item = document.createElement("div");
-        item.className = "preview-item";
-        item.innerHTML = `
-            <img src="${url}" alt="Galería">
-            <span class="badge">${cat}</span>
-            <div class="actions">
-                <button class="secondary" onclick="deleteImage('galeria', '${url}')">Eliminar</button>
-            </div>
-        `;
-        container.appendChild(item);
+        c.innerHTML += `
+            <div class="preview-item">
+                <img src="${img.url}">
+                <span class="badge">${img.categoria}</span>
+                <div class="actions">
+                    <button class="secondary" onclick="deleteImage('galeria', '${img.url}')">Eliminar</button>
+                </div>
+            </div>`;
     });
 }
 
-// ================== INICIO ===================
 fetchContent();
 </script>
+
 </body>
 </html>
