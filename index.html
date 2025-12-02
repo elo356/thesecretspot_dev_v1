@@ -1186,25 +1186,37 @@ async function cargarContenido() {
     // -----------------------------------------
     // 1. VIDEO DEL HEADER
     // -----------------------------------------
-    if (data.header_video) {
-        const video = document.getElementById("hero-video");
+   // 1. VIDEO DEL HEADER — carga estable
+if (data.header_video) {
+    const video = document.getElementById("hero-video");
 
-        try { video.pause(); } catch(e) {}
+    // Si ya tiene el mismo video cargado → NO lo recargues
+    const currentSrc = video.querySelector("source")?.src || "";
 
-        // Limpiar sources
-        while (video.firstChild) {
-            video.removeChild(video.firstChild);
-        }
+    if (!currentSrc.includes(data.header_video)) {
 
-        const source = document.createElement("source");
+        video.pause();
+
+        // Cambia solo el SRC sin borrar el elemento
+        const source = video.querySelector("source");
         source.src = data.header_video;
-        source.type = "video/mp4";
-        video.appendChild(source);
 
+        // Cargar correctamente
         video.load();
+
         video.muted = true;
-        video.play().catch(()=>{});
+
+        // Intentar autoplay varias veces (Chrome/SAFARI fix)
+        const tryPlay = () => {
+            video.play().catch(() => {
+                setTimeout(tryPlay, 300);  
+            });
+        };
+
+        tryPlay();
     }
+}
+
 
     // -----------------------------------------
     // 2. SERVICIOS (4 imágenes)
