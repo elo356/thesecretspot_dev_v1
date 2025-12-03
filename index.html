@@ -1190,7 +1190,7 @@ async function cargarContenido() {
 // 1. VIDEO DEL HEADER — carga estable
 // 1. VIDEO DEL HEADER — carga estable y universal
 if (data.header_video) {
-    const newVideoURL = `${API}${data.header_video}`;
+    const newVideoURL = data.header_video;
     console.log("Cambiando video a:", newVideoURL);
 
     const video = document.getElementById("hero-video");
