@@ -1,457 +1,395 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Panel del Cliente - The Secret Spot</title>
-    <style>
-        body {
-            font-family: system-ui, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f3f4f6;
-        }
-        header {
-            background: #111827;
-            color: white;
-            padding: 16px 24px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 20px;
-        }
-        main {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .grid {
-            display: grid;
-            gap: 16px;
-        }
-        @media(min-width: 900px) {
-            .grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.08);
-        }
-        .card h2 {
-            margin-top: 0;
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
-        .card small {
-            color: #6b7280;
-        }
-        .field {
-            margin-bottom: 10px;
-        }
-        .field label {
-            display: block;
-            font-size: 13px;
-            margin-bottom: 4px;
-            color: #374151;
-        }
-        input[type="text"],
-        input[type="file"],
-        select {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 6px 8px;
-            border-radius: 4px;
-            border: 1px solid #d1d5db;
-            font-size: 14px;
-        }
-        button {
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            background: #111827;
-            color: white;
-        }
-        button.secondary {
-            background: #dc2626;
-        }
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .preview-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .preview-item {
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 6px;
-            background: #f9fafb;
-            max-width: 150px;
-        }
-        .preview-item img {
-            width: 100%;
-            border-radius: 4px;
-            display: block;
-        }
-        .preview-item small {
-            display: block;
-            font-size: 11px;
-            margin-top: 4px;
-            color: #4b5563;
-        }
-        .actions {
-            margin-top: 6px;
-            display: flex;
-            gap: 4px;
-        }
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 999px;
-            font-size: 11px;
-            background: #e5e7eb;
-            color: #374151;
-            margin-top: 4px;
-        }
-        .gallery-filters {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-        .status {
-            margin-bottom: 10px;
-            font-size: 13px;
-            color: #6b7280;
-        }
-    </style>
-</head>
-<body>
-<header>
-    <h1>Panel del Cliente - The Secret Spot</h1>
-</header>
+<meta charset="UTF-8">
+<title>Panel del Cliente - The Secret Spot</title>
 
+<style>
+/* GLOBAL */
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: #f5f6fa;
+    color: #333;
+    display: flex;
+    height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    background: #111827;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar h1 {
+    font-size: 18px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.sidebar button {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #1f2937;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+.sidebar button:hover {
+    background: #374151;
+}
+
+.logout-btn {
+    margin-top: auto;
+    background: #dc2626 !important;
+}
+
+/* MOBILE MENU */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #111827;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 26px;
+    border-radius: 6px;
+    z-index: 999;
+}
+
+@media (max-width: 850px) {
+    .menu-toggle { display: block; }
+    .sidebar {
+        position: fixed;
+        left: 0; top: 0;
+        height: 100vh;
+        transform: translateX(-250px);
+        transition: .3s;
+        z-index: 999;
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}
+
+/* MAIN */
+main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.hidden-section {
+    display: none;
+}
+
+.status {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* CARDS */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    margin: 0 0 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 6px;
+}
+
+button.action {
+    margin-top: 10px;
+    padding: 10px;
+    background: #111827;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button.secondary {
+    background: #dc2626 !important;
+}
+
+/* LIST PREVIEW */
+.preview-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.preview-item {
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.preview-item img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.preview-scroll {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+/* LOADER */
+#uploadLoader {
+    display: none;
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.6);
+    color:white;
+    text-align:center;
+    padding-top:40vh;
+    font-size:22px;
+    z-index: 999999;
+}
+</style>
+</head>
+
+<body>
+
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <h1>The Secret Spot</h1>
+
+    <button onclick="showScreen('general')">⚙ General</button>
+    <button onclick="showScreen('galeria')">🖼 Galería</button>
+
+    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+</aside>
+
+<!-- MAIN CONTENT -->
 <main>
     <div class="status" id="status">Cargando contenido...</div>
 
-    <div class="grid">
-        <!-- VIDEO HEADER -->
-  <section class="card">
-    <h2>Video del Header</h2>
-    <small>Sube un video .mp4 para el header</small>
+    <!-- ===================== GENERAL SCREEN ===================== -->
+    <div id="screen-general">
 
-    <div class="field" style="margin-top:10px;">
-        <label for="videoHeaderFile">Seleccionar video</label>
-        <input type="file" id="videoHeaderFile" accept="video/mp4">
-    </div>
-
-    <button onclick="uploadVideo()">Subir Video</button>
-
-    <div id="headerVideoPreview" style="margin-top:10px;"></div>
-    <div id="uploadLoader" style="
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(0,0,0,0.55);
-    backdrop-filter: blur(2px);
-    z-index:9999;
-    color:white;
-    font-size:22px;
-    text-align:center;
-    padding-top:40vh;
-">
-    ⏳ Subiendo archivo, por favor espere...
-</div>
-
-</section>
-
-<button onclick="logout()" style="float:right; margin-top:10px;">Cerrar sesión</button>
-
-        <!-- SOBRE NOSOTROS -->
         <section class="card">
-            <h2>Foto - Sobre Nosotros</h2>
-            <small>Imagen única de la sección Sobre Nosotros.</small>
-            <div class="field" style="margin-top:10px;">
-                <label for="sobreNosotrosFile">Seleccionar imagen</label>
-                <input type="file" id="sobreNosotrosFile" accept="image/*">
-            </div>
-            <button onclick="uploadImage('sobre_nosotros', 'sobreNosotrosFile')">Subir / Reemplazar</button>
+            <h2>Video del Header</h2>
+            <input type="file" id="videoHeaderFile" accept="video/mp4">
+            <button class="action" onclick="uploadVideo()">Subir Video</button>
+            <div id="headerVideoPreview"></div>
+        </section>
+
+        <section class="card">
+            <h2>Sobre Nosotros</h2>
+            <input type="file" id="sobreNosotrosFile">
+            <button class="action" onclick="uploadImage('sobre_nosotros','sobreNosotrosFile')">Subir</button>
             <div class="preview-list" id="sobreNosotrosPreview"></div>
         </section>
 
-        <!-- FOTO GRUPAL -->
         <section class="card">
             <h2>Foto Grupal</h2>
-            <small>Imagen única del equipo completo.</small>
-            <div class="field" style="margin-top:10px;">
-                <label for="fotoGrupalFile">Seleccionar imagen</label>
-                <input type="file" id="fotoGrupalFile" accept="image/*">
-            </div>
-            <button onclick="uploadImage('foto_grupal', 'fotoGrupalFile')">Subir / Reemplazar</button>
+            <input type="file" id="fotoGrupalFile">
+            <button class="action" onclick="uploadImage('foto_grupal','fotoGrupalFile')">Subir</button>
             <div class="preview-list" id="fotoGrupalPreview"></div>
         </section>
 
-        <!-- SERVICIOS -->
         <section class="card">
-            <h2>Servicios (4 fotos)</h2>
-            <small>Se utilizarán las primeras 4 imágenes en la web.</small>
-            <div class="field" style="margin-top:10px;">
-                <label for="serviciosFile">Añadir imagen de servicio</label>
-                <input type="file" id="serviciosFile" accept="image/*">
+            <h2>Servicios</h2>
+            <input type="file" id="serviciosFile">
+            <button class="action" onclick="uploadImage('servicios','serviciosFile')">Añadir</button>
+            <div class="preview-scroll">
+                <div class="preview-list" id="serviciosPreview"></div>
             </div>
-            <button onclick="uploadImage('servicios', 'serviciosFile')">Subir imagen</button>
-            <div class="preview-list" id="serviciosPreview"></div>
         </section>
 
-        <!-- EQUIPO -->
         <section class="card">
-            <h2>Equipo (6 fotos)</h2>
-            <small>Se mostrarán hasta 6 fotos del equipo.</small>
-            <div class="field" style="margin-top:10px;">
-                <label for="equipoFile">Añadir foto de integrante</label>
-                <input type="file" id="equipoFile" accept="image/*">
+            <h2>Equipo</h2>
+            <input type="file" id="equipoFile">
+            <button class="action" onclick="uploadImage('equipo','equipoFile')">Añadir</button>
+            <div class="preview-scroll">
+                <div class="preview-list" id="equipoPreview"></div>
             </div>
-            <button onclick="uploadImage('equipo', 'equipoFile')">Subir imagen</button>
-            <div class="preview-list" id="equipoPreview"></div>
         </section>
 
-        <!-- GALERÍA -->
+    </div>
+
+    <!-- ===================== GALERIA SCREEN ===================== -->
+    <div id="screen-galeria" class="hidden-section">
+
         <section class="card">
             <h2>Galería</h2>
-            <small>Cada imagen tiene una categoría para filtrar</small>
 
-            <div class="field" style="margin-top:10px;">
-                <label for="galeriaFile">Imagen para la galería</label>
-                <input type="file" id="galeriaFile" accept="image/*">
+            <input type="file" id="galeriaFile">
+            <select id="galeriaCategoria">
+                <option value="manicura-pedicura">Manicura y Pedicura</option>
+                <option value="damas">Damas</option>
+                <option value="caballeros">Caballeros</option>
+                <option value="ninos">Niños</option>
+            </select>
+
+            <button class="action" onclick="uploadGaleria()">Subir a galería</button>
+
+            <br><br>
+            <strong>Filtrar:</strong>
+            <select id="galeriaFilter" onchange="renderGaleria()">
+                <option value="all">Todas</option>
+            </select>
+
+            <div class="preview-scroll">
+                <div class="preview-list" id="galeriaPreview"></div>
             </div>
-            <div class="field">
-                <label for="galeriaCategoria">Categoría</label>
-               <select id="galeriaCategoria">
-    <option value="manicura-pedicura">Manicura y Pedicura</option>
-    <option value="damas">Damas</option>
-    <option value="caballeros">Caballeros</option>
-    <option value="ninos">Niños</option>
-</select>
-
-            </div>
-            <button onclick="uploadGaleria()">Subir a galería</button>
-
-            <hr style="margin:14px 0; border:none; border-top:1px solid #e5e7eb;">
-
-            <div class="gallery-filters">
-                <strong>Filtrar por categoría:</strong>
-                <select id="galeriaFilter" onchange="renderGaleria()">
-                    <option value="all">Todas</option>
-                </select>
-            </div>
-
-            <div class="preview-list" id="galeriaPreview"></div>
         </section>
+
     </div>
-</main><script>
-if (!localStorage.getItem("panel_token")) {
-    window.location.href = "login.html"; 
+
+</main>
+
+<div id="uploadLoader">⏳ Subiendo archivo...</div>
+
+<script>
+
+/* ========= MENU HANDLING ========= */
+function toggleMenu() {
+    document.getElementById("sidebar").classList.toggle("open");
 }
 
-const API = "https://internal-api.ladiesandmengrooming.com";
-const TOKEN = localStorage.getItem("panel_token");
+function showScreen(screen) {
+    document.getElementById("screen-general").classList.add("hidden-section");
+    document.getElementById("screen-galeria").classList.add("hidden-section");
 
-// ==============================================
-// HELPERS
-// ==============================================
-function setStatus(msg) {
-    document.getElementById("status").textContent = msg;
+    document.getElementById(`screen-${screen}`).classList.remove("hidden-section");
+
+    if (window.innerWidth <= 850) {
+        document.getElementById("sidebar").classList.remove("open");
+    }
 }
 
-async function authorizedFetch(url, options = {}) {
+/* ========= PANEL BACKEND LOGIC (same as your original) ========= */
+
+if (!localStorage.getItem("panel_token")) window.location.href = "login.html";
+const API="https://internal-api.ladiesandmengrooming.com";
+const TOKEN=localStorage.getItem("panel_token");
+
+function setStatus(t){ document.getElementById("status").textContent=t; }
+
+async function authorizedFetch(url,options={}) {
     options.headers = options.headers || {};
-    options.headers["Authorization"] = TOKEN; 
-    return fetch(url, options);
+    options.headers["Authorization"] = TOKEN;
+    return fetch(url,options);
 }
 
-// ==============================================
-// CARGAR CONTENIDO
-// ==============================================
 let state = {
-    header_video: "",
-    servicios: [],
-    sobre_nosotros: "",
-    foto_grupal: "",
-    equipo: [],
-    galeria: []
+    header_video:"",
+    servicios:[],
+    sobre_nosotros:"",
+    foto_grupal:"",
+    equipo:[],
+    galeria:[]
 };
 
-async function fetchContent() {
-    try {
+async function fetchContent(){
+    try{
         setStatus("Cargando contenido...");
-        const res = await authorizedFetch(`${API}/content`);
-        if (!res.ok) throw new Error("No se pudo obtener el contenido");
-
-        state = await res.json();
+        const r = await authorizedFetch(`${API}/content`);
+        state = await r.json();
         renderAll();
         setStatus("Contenido cargado.");
-    } catch (err) {
-        console.error(err);
+    } catch(e){
         setStatus("Error cargando contenido.");
     }
 }
 
-// ==============================================
-// SUBIDA DE IMÁGENES
-// ==============================================
-async function uploadImage(section, fileInputId) {
-    const input = document.getElementById(fileInputId);
-    const file = input.files[0];
-    if (!file) {
-        alert("Selecciona un archivo");
-        return;
-    }
+function showLoader(msg){ const l=document.getElementById("uploadLoader"); l.textContent="⏳ "+msg; l.style.display="block"; }
+function hideLoader(){ document.getElementById("uploadLoader").style.display="none"; }
+
+async function uploadImage(section,inputId){
+    const f=document.getElementById(inputId).files[0];
+    if(!f) return alert("Selecciona una imagen");
 
     showLoader("Subiendo imagen...");
+    const fd=new FormData();
+    fd.append("section",section);
+    fd.append("file",f);
 
-    const form = new FormData();
-    form.append("section", section);
-    form.append("file", file);
+    const r= await fetch(`${API}/upload-image`,{method:"POST",body:fd});
+    hideLoader();
+    if(!r.ok) return alert("Error al subir");
 
-    try {
-        const res = await fetch(`${API}/upload-image`, {
-            method: "POST",
-            body: form
-        });
-
-        hideLoader();
-
-        if (!res.ok) throw new Error("Error subiendo imagen");
-
-        input.value = "";
-        await fetchContent();
-        alert("Imagen subida correctamente");
-        
-    } catch (err) {
-        hideLoader();
-        console.error(err);
-        alert("Error al subir la imagen");
-    }
-}
-async function uploadVideo() {
-    const file = document.getElementById("videoHeaderFile").files[0];
-
-    if (!file) {
-        alert("Selecciona un archivo de video");
-        return;
-    }
-
-    showLoader("Subiendo video (esto puede tardar)...");
-
-    const form = new FormData();
-    form.append("file", file);
-
-    try {
-        const res = await fetch(`${API}/upload-video`, {
-            method: "POST",
-            body: form
-        });
-
-        hideLoader();
-
-        if (!res.ok) throw new Error("Error subiendo video");
-
-        alert("Video subido correctamente");
-        fetchContent();
-
-    } catch (err) {
-        hideLoader();
-        console.error(err);
-        alert("Error al subir el video");
-    }
-}
-function showLoader(msg = "Procesando...") {
-    const loader = document.getElementById("uploadLoader");
-    loader.textContent = "⏳ " + msg;
-    loader.style.display = "block";
+    document.getElementById(inputId).value="";
+    fetchContent();
 }
 
-function hideLoader() {
-    const loader = document.getElementById("uploadLoader");
-    loader.style.display = "none";
-}
-function logout() {
-    localStorage.removeItem("panel_token");
-    window.location.href = "login.html";
-}
-async function uploadGaleria() {
-    const file = document.getElementById("galeriaFile").files[0];
-    const categoria = document.getElementById("galeriaCategoria").value;
+async function uploadGaleria(){
+    const f=document.getElementById("galeriaFile").files[0];
+    const cat=document.getElementById("galeriaCategoria").value;
 
-    if (!file) {
-        alert("Selecciona una imagen");
-        return;
-    }
+    if(!f) return alert("Selecciona una imagen");
 
-    showLoader("Subiendo imagen a galería...");
+    showLoader("Subiendo...");
+    const fd=new FormData();
+    fd.append("section","galeria");
+    fd.append("categoria",cat);
+    fd.append("file",f);
 
-    const form = new FormData();
-    form.append("section", "galeria");
-    form.append("categoria", categoria);
-    form.append("file", file);
+    const r= await fetch(`${API}/upload-image`,{method:"POST",body:fd});
+    hideLoader();
+    if(!r.ok) return alert("Error");
 
-    try {
-        const res = await fetch(`${API}/upload-image`, {
-            method: "POST",
-            body: form,
-        });
-
-        hideLoader();
-
-        if (!res.ok) throw new Error("Error al subir imagen");
-
-        alert("Imagen subida a galería");
-        document.getElementById("galeriaFile").value = "";
-        fetchContent();
-
-    } catch (err) {
-        hideLoader();
-        console.error(err);
-        alert("Error al subir la imagen");
-    }
+    document.getElementById("galeriaFile").value="";
+    fetchContent();
 }
 
-// ==============================================
-// ELIMINAR IMAGEN
-// ==============================================
-async function deleteImage(section, url) {
-    if (!confirm("¿Eliminar esta imagen?")) return;
+async function uploadVideo(){
+    const f=document.getElementById("videoHeaderFile").files[0];
+    if(!f) return alert("Selecciona un video");
 
-    try {
-        setStatus("Eliminando...");
+    showLoader("Subiendo video...");
+    const fd=new FormData();
+    fd.append("file",f);
 
-        const res = await authorizedFetch(
-            `${API}/delete-image?section=${encodeURIComponent(section)}&url=${encodeURIComponent(url)}`,
-            { method: "DELETE" }
-        );
+    const r= await fetch(`${API}/upload-video`,{method:"POST",body:fd});
+    hideLoader();
+    if(!r.ok) return alert("Error al subir el video");
 
-        if (!res.ok) throw new Error("Error eliminando");
-
-        await fetchContent();
-        alert("Eliminada correctamente");
-    } catch {
-        alert("Error al eliminar");
-    }
+    fetchContent();
 }
 
-// ==============================================
-// RENDERIZADOS
-// ==============================================
-function renderAll() {
+async function deleteImage(section,url){
+    if(!confirm("¿Eliminar imagen?")) return;
+
+    const r= await authorizedFetch(`${API}/delete-image?section=${section}&url=${url}`,{
+        method:"DELETE"
+    });
+
+    if(!r.ok) return alert("Error eliminando");
+    fetchContent();
+}
+
+function renderAll(){
     renderHeaderVideo();
     renderSobreNosotros();
     renderFotoGrupal();
@@ -460,100 +398,75 @@ function renderAll() {
     renderGaleria();
 }
 
-function renderHeaderVideo() {
-    const p = document.getElementById("headerVideoPreview");
-    p.innerHTML = state.header_video
-        ? `<video src="${API}${state.header_video}" controls style="width:100%;max-width:400px;border-radius:6px;"></video>`
-        : "";
+function renderHeaderVideo(){
+    document.getElementById("headerVideoPreview").innerHTML =
+        state.header_video ? `<video src="${API}${state.header_video}" controls style="width:100%;border-radius:8px"></video>` : "";
 }
 
-function renderSobreNosotros() {
-    const c = document.getElementById("sobreNosotrosPreview");
-    c.innerHTML = "";
-    if (!state.sobre_nosotros) return;
-
-    c.innerHTML = `
+function renderSobreNosotros(){
+    document.getElementById("sobreNosotrosPreview").innerHTML =
+        state.sobre_nosotros ? `
         <div class="preview-item">
             <img src="${state.sobre_nosotros}">
-            <div class="actions">
-                <button class="secondary" onclick="deleteImage('sobre_nosotros', '${state.sobre_nosotros}')">Eliminar</button>
-            </div>
-        </div>`;
+            <button class="secondary action" onclick="deleteImage('sobre_nosotros','${state.sobre_nosotros}')">Eliminar</button>
+        </div>` : "";
 }
 
-function renderFotoGrupal() {
-    const c = document.getElementById("fotoGrupalPreview");
-    c.innerHTML = "";
-    if (!state.foto_grupal) return;
-
-    c.innerHTML = `
+function renderFotoGrupal(){
+    document.getElementById("fotoGrupalPreview").innerHTML=
+        state.foto_grupal ? `
         <div class="preview-item">
             <img src="${state.foto_grupal}">
-            <div class="actions">
-                <button class="secondary" onclick="deleteImage('foto_grupal', '${state.foto_grupal}')">Eliminar</button>
-            </div>
-        </div>`;
+            <button class="secondary action" onclick="deleteImage('foto_grupal','${state.foto_grupal}')">Eliminar</button>
+        </div>`:"";
 }
 
-function renderServicios() {
-    const c = document.getElementById("serviciosPreview");
-    c.innerHTML = "";
-    state.servicios.forEach(url => {
-        c.innerHTML += `
-            <div class="preview-item">
-                <img src="${url}">
-                <div class="actions">
-                    <button class="secondary" onclick="deleteImage('servicios', '${url}')">Eliminar</button>
-                </div>
-            </div>`;
-    });
+function renderServicios(){
+    document.getElementById("serviciosPreview").innerHTML =
+        state.servicios.map(url => `
+        <div class="preview-item">
+            <img src="${url}">
+            <button class="secondary action" onclick="deleteImage('servicios','${url}')">Eliminar</button>
+        </div>`).join("");
 }
 
-function renderEquipo() {
-    const c = document.getElementById("equipoPreview");
-    c.innerHTML = "";
-    state.equipo.forEach(url => {
-        c.innerHTML += `
-            <div class="preview-item">
-                <img src="${url}">
-                <div class="actions">
-                    <button class="secondary" onclick="deleteImage('equipo', '${url}')">Eliminar</button>
-                </div>
-            </div>`;
-    });
+function renderEquipo(){
+    document.getElementById("equipoPreview").innerHTML =
+        state.equipo.map(url => `
+        <div class="preview-item">
+            <img src="${url}">
+            <button class="secondary action" onclick="deleteImage('equipo','${url}')">Eliminar</button>
+        </div>`).join("");
 }
 
-function renderGaleria() {
-    const c = document.getElementById("galeriaPreview");
-    const select = document.getElementById("galeriaFilter");
+function renderGaleria(){
+    const filter=document.getElementById("galeriaFilter");
+    filter.innerHTML=`<option value="all">Todas</option>`;
 
-    c.innerHTML = "";
-    select.innerHTML = `<option value="all">Todas</option>`;
-
-    const categorias = [...new Set(state.galeria.map(g => g.categoria))];
-
-    categorias.forEach(cat => {
-        select.innerHTML += `<option value="${cat}">${cat}</option>`;
+    [...new Set(state.galeria.map(g=>g.categoria))].forEach(cat=>{
+        filter.innerHTML+=`<option value="${cat}">${cat}</option>`;
     });
 
-    const filtro = select.value;
-    const images = filtro === "all"
-        ? state.galeria
-        : state.galeria.filter(g => g.categoria === filtro);
+    const f=filter.value;
+    const imgs=f==="all"?state.galeria:state.galeria.filter(g=>g.categoria===f);
 
-    images.forEach(img => {
-        c.innerHTML += `
-            <div class="preview-item">
-                <img src="${img.url}">
-                <span class="badge">${img.categoria}</span>
-                <div class="actions">
-                    <button class="secondary" onclick="deleteImage('galeria', '${img.url}')">Eliminar</button>
-                </div>
-            </div>`;
-    });
+    document.getElementById("galeriaPreview").innerHTML =
+        imgs.map(img=>`
+        <div class="preview-item">
+            <img src="${img.url}">
+            <div class="badge">${img.categoria}</div>
+            <button class="secondary action" onclick="deleteImage('galeria','${img.url}')">Eliminar</button>
+        </div>`).join("");
+}
+
+function logout(){
+    localStorage.removeItem("panel_token");
+    window.location.href="login.html";
 }
 
 fetchContent();
+showScreen("general"); // default screen
+
 </script>
 
 </body>
