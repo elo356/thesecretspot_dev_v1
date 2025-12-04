@@ -67,7 +67,7 @@
 
     <!-- Hero Section -->
     <section class="hero" id="inicio">
-        <video id="hero-video" autoplay muted loop playsinline>
+        <video id="hero-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
             <source src="images/vids/vid3.mp4" type="video/mp4">
             Tu navegador no soporta el elemento de video.
         </video>
@@ -1189,7 +1189,7 @@ async function cargarContenido() {
    // 1. VIDEO DEL HEADER — carga estable
 // 1. VIDEO DEL HEADER — carga estable
 // 1. VIDEO DEL HEADER — carga estable y universal
-if (data.header_video) {
+        if (data.header_video) {
     const newVideoURL = data.header_video;
     console.log("Cambiando video a:", newVideoURL);
 
@@ -1197,22 +1197,34 @@ if (data.header_video) {
 
     if (!video.src.includes(data.header_video)) {
         console.log("Nuevo video detectado, recargando...");
+                // Ensure inline autoplay attrs for iOS before changing src
+                try {
+                    video.pause();
+                } catch(e) {}
+                video.setAttribute('playsinline', '');
+                video.setAttribute('webkit-playsinline', '');
+                video.playsInline = true;
+                video.muted = true;
+                video.src = newVideoURL;   // set source
+                video.load();
 
-        video.pause();
-        video.src = newVideoURL;   // 🔥 Fix aquí
-        video.load();
-        video.muted = true;
+                const tryPlay = () => {
+                    video.play().then(() => {
+                        console.log("Video reproduciéndose correctamente.");
+                    }).catch(err => {
+                        console.log("Error al reproducir:", err);
+                        // retry slowly in case of transient issues
+                        setTimeout(tryPlay, 350);
+                    });
+                };
 
-        const tryPlay = () => {
-            video.play().then(() => {
-                console.log("Video reproduciéndose correctamente.");
-            }).catch(err => {
-                console.log("Error al reproducir:", err);
-                setTimeout(tryPlay, 350);
-            });
-        };
-
-        tryPlay();
+                // Try to play once metadata is available (helps with iOS timing)
+                video.addEventListener('loadedmetadata', function onMeta() {
+                    video.removeEventListener('loadedmetadata', onMeta);
+                    tryPlay();
+                }, { once: true });
+                // fallback: attempt immediately as well
+                tryPlay();
     }
 }
 
