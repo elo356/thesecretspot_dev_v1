@@ -1,3 +1,47 @@
+.barber-section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 48px;
+    padding: 60px 0 40px 0;
+    background: #f7f7f7;
+}
+.barber-card {
+    min-height: 520px;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    ...existing code...
+}
+.barber-info p {
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 18px;
+    font-size: 1.01rem;
+    line-height: 1.6;
+    color: #444;
+    text-align: left;
+    border-left: 3px solid #eee;
+    padding-left: 14px;
+}
+@media (max-width: 900px) {
+    .barber-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+    }
+    .barber-card {
+        min-height: unset;
+        max-width: 98vw;
+        padding: 18px 8px 18px 8px;
+    }
+    .barber-photo img { max-width: 98vw; max-height: 220px; }
+    .barber-info p { max-height: unset; overflow-y: visible; }
+}
 /* Diseño Moderno para The Secret Spot - Negro y Blanco */
 :root {
     --primary-color: #000000;
@@ -60,6 +104,160 @@ nav {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: fadeInUp 0.8s ease;
+}
+/* Contenedor general: columna */
+.barbers-container {
+    display: flex;
+    flex-direction: column;    /* 🔥 IMPORTANTE: fuerza vertical */
+    align-items: center;       /* Centra todo */
+    gap: 40px;                 /* Espacio entre tarjetas */
+    padding: 50px 20px;
+    background: #f5f5f5;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Tarjeta de barbero */
+/* Tarjeta de barbero moderna y profesional */
+.barber-section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 48px;
+    padding: 60px 0 40px 0;
+    background: #f7f7f7;
+}
+.barber-card {
+    width: 100%;
+    max-width: 420px;
+    min-height: 520px;
+    background: #fff;
+    padding: 32px 28px 28px 28px;
+    border-radius: 22px;
+    text-align: center;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.13);
+    transition: box-shadow 0.3s, transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    border: 1.5px solid #ececec;
+    background: linear-gradient(135deg, #fff 80%, #f5f5f5 100%);
+}
+.barber-card:hover {
+    box-shadow: 0 18px 48px rgba(0,0,0,0.18);
+    transform: translateY(-7px) scale(1.03);
+    border-color: var(--primary-color);
+}
+.barber-photo img {
+    width: 100%;
+    max-width: 320px;
+    max-height: 320px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 22px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    border: 2.5px solid #eaeaea;
+}
+.barber-info h2 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin-bottom: 2px;
+    color: var(--primary-color);
+    letter-spacing: 0.5px;
+}
+.barber-info h4 {
+    color: #555;
+    margin-bottom: 16px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+.barber-info p {
+    font-size: 1.01rem;
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 18px;
+    text-align: left;
+    border-left: 3px solid #eee;
+    padding-left: 14px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+@media (max-width: 900px) {
+    .barber-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+    }
+    .barber-card {
+        min-height: unset;
+        max-width: 98vw;
+        padding: 18px 8px 18px 8px;
+    }
+    .barber-photo img { max-width: 98vw; max-height: 220px; }
+    .barber-info p { max-height: unset; overflow-y: visible; }
+}
+.btn-agendar {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.85rem 2.2rem;
+    font-size: 1.08rem;
+    font-weight: 700;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+}
+.btn-agendar:hover {
+    background: #222;
+    transform: translateY(-2px) scale(1.04);
+}
+@media (max-width: 600px) {
+    .barber-section { padding: 32px 0 18px 0; gap: 32px; }
+    .barber-card { max-width: 98vw; padding: 18px 8px 18px 8px; }
+    .barber-photo img { max-width: 98vw; max-height: 220px; }
+    .barber-info h2 { font-size: 1.3rem; }
+    .barber-info h4 { font-size: 0.98rem; }
+    .barber-info p { font-size: 0.95rem; padding-left: 8px; }
+    .btn-agendar { font-size: 0.98rem; padding: 0.7rem 1.2rem; }
+}
+
+.barber-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Foto */
+.barber-photo img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.25);
+}
+
+/* Texto */
+.barber-info h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.barber-info h4 {
+    color: #777;
+    margin-bottom: 15px;
+    font-size: 17px;
+}
+
+.barber-info p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
 }
 
 /* Logo image styling (when using an image instead of text) */
