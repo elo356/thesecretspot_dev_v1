@@ -285,7 +285,7 @@
         </p>
 
         <!-- Título para la sección de fotos del equipo -->
-        <h2 class="team-photos-title" style="text-align:center; font-size:3.1rem; font-weight:700; margin:2.5rem 0 1.2rem 0; color:#fff; letter-spacing:0.5px;">Conoce a nuestro equipo</h2>
+        <h2 class="team-photos-title" style="text-align:center; font-size:2.5rem; font-weight:700; margin:2.5rem 0 1.2rem 0; color:#fff; letter-spacing:0.5px;">Conoce a nuestro equipo</h2>
 
         <!-- Fotos individuales en forma circular -->
         <div class="team-photos">
@@ -771,12 +771,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function showModal(idx) {
         const member = teamData[idx];
         if (!member) return;
-        // Animación fade
-        const content = modal.querySelector('.modal-content');
-        content.classList.remove('modal-anim');
-        void content.offsetWidth; // reflow para reiniciar animación
-        content.classList.add('modal-anim');
-        // Actualiza datos
         modalImg.src = member.img;
         modalImg.alt = member.name;
         modalName.textContent = member.name;
