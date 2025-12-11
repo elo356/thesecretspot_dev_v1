@@ -12,6 +12,23 @@
 .modal-anim-slide-right {
     animation: modalSlideRight 0.45s cubic-bezier(0.4,0,0.2,1);
 }
+
+
+.accordion summary {
+  font-weight: bold;
+  padding: 10px;
+  cursor: pointer;
+  background: #f3f3f3;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+
+.accordion ul {
+  margin: 10px 0 15px 20px;
+}
+
+
+
 .modal-nav {
         width: 48px;
         height: 48px;
@@ -1845,5 +1862,194 @@ footer {
         padding: 0.5rem 0.9rem;
         font-size: 0.85rem;
         border-radius: 50px;
+    }
+}/* =============================
+   SERVICIOS PREMIUM (DISEÑO MODERNO)
+   =========/* =============================
+   SERVICIOS PREMIUM (DISEÑO MODERNO CORREGIDO)
+   ============================= */
+
+.servicios-premium-section {
+    max-width: 1100px;
+    margin: 5rem auto;
+    padding: 0 20px;
+    text-align: center;
+    color: #000000;
+}
+
+.servicios-premium-section .titulo-principal {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: .5px;
+    margin-bottom: .3rem;
+}
+
+.servicios-premium-section .subtitulo {
+    font-size: 1.2rem;
+    opacity: .8;
+    margin-bottom: 1rem;
+}
+
+.descripcion-intro {
+    font-size: 1.1rem;
+    opacity: .7;
+    margin-bottom: 3rem;
+}
+
+/* TITULOS DE CATEGORIA */
+.categoria-titulo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: var(--primary-color);
+}
+
+/* GRID UNIVERSAL PERFECTAMENTE ALINEADO */
+/* GRID UNIVERSAL PERFECTAMENTE ALINEADO */
+.servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+/* CAJAS — Añadido centrado vertical/horizontal */
+.servicio-box {
+    background: rgba(0, 0, 0, 0.04);
+    padding: 1.8rem;
+    border-radius: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    transition: .3s ease;
+
+    display: flex;               /* centrado perfecto */
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;          /* centrado horizontal del texto */
+
+    align-items: center;         /* centra título + texto */
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+
+    /* ❗ REEMPLAZO tu "1fr" por este sistema flexible */
+    .servicios-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        justify-items: center;   /* centra cada tarjeta */
+    }
+
+    .servicios-doble {
+        grid-template-columns: 1fr;
+    }
+
+    .titulo-principal { font-size: 2.2rem; }
+}
+
+.servicio-box:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+}
+
+.servicio-box h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: .5rem;
+    color: #000;
+}
+
+.servicio-box p {
+    font-size: 1rem;
+    opacity: .75;
+}
+
+/* SECCIÓN MANOS & PIES + SPA */
+.servicios-doble {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 2.5rem;
+}
+
+.columna .servicio-box {
+    margin-bottom: 1.2rem;
+}
+
+/* FRASE "BELIEVE" */
+.frase {
+    grid-column: 1 / -1; /* Hace que ocupe todo el ancho */
+    margin-top: 1rem;
+    font-style: italic;
+    opacity: .7;
+    text-align: center;
+}
+
+/* ---------- MOBILE MINIMALISTA ---------- */
+@media (max-width: 768px) {
+
+    /* Reduce espaciado general */
+    .servicios-premium-section {
+        padding: 0 10px;
+        margin: 3rem auto;
+    }
+
+    .titulo-principal {
+        font-size: 1.8rem !important;
+        margin-bottom: .5rem;
+    }
+
+    .descripcion-intro {
+        font-size: .95rem;
+        margin-bottom: 1.6rem;
+    }
+
+    .categoria-titulo {
+        font-size: 1.3rem;
+        margin: 2rem 0 1rem;
+    }
+
+    /* GRID COMPACTO Y ADAPTABLE */
+    .servicios-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+        gap: 12px;
+    }
+
+    /* TARJETAS MINIMALISTAS */
+    .servicio-box {
+        padding: 1rem !important;  /* MUCHO más compacto */
+        border-radius: 10px;
+        text-align: center;
+
+        /* Centrado total */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        /* Tamaños más pequeños */
+        min-height: 120px;  /* Evita cajas gigantes */
+    }
+
+    .servicio-box h4 {
+        font-size: 1rem !important;
+        margin-bottom: .3rem;
+    }
+
+    .servicio-box p {
+        font-size: .85rem !important;
+        opacity: .7;
+    }
+
+    /* Manos & Pies + Spa */
+    .servicios-doble {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+
+    .columna .servicio-box {
+        margin-bottom: .8rem;
+    }
+
+    .frase {
+        font-size: .9rem;
+        margin-top: .5rem;
     }
 }
