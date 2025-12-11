@@ -766,6 +766,76 @@ Un profesional serio, con esencia juvenil y un talento que continúa creciendo."
     </div>
 </section>
 <script>
+    // --- Traducción correcta de reseñas en el modal ---
+(function(){
+    const staffTranslations = {
+        "Zuleina Paredes": {
+            en: {
+                role: "Nail Technician & Pedicure Specialist",
+                info: "With over six years of experience, Zuleina Paredes—affectionately known as Zuly—is one of the most outstanding professionals in the art of manicures and pedicures at The Secret Spot PR. Her precision, attention to detail, and technical excellence have made her a reference for clients seeking beauty, wellness, and lasting results. Perfectionist and dedicated, Zuly masters acrylic, gel, artistic design, and professional pedicure techniques. Beyond her talent, she is known for her warmth, exceptional service, and peaceful energy. Zuly is a key pillar within the salon."
+            }
+        },
+        "Jessica Soto Soto": {
+            en: {
+                role: "Barber & Stylist",
+                info: "With over six years in the industry, Jessica Soto stands out for her technique, energy, and professionalism. She specializes in fades—especially mid and low fades—and curly haircuts, blending precision and creativity. Jessica is highly communicative, spiritual, and constantly growing. She has a unique talent for visualizing the perfect style for clients who are unsure what to choose. Passionate about music, she brings fresh energy and charisma to The Secret Spot PR."
+            }
+        },
+        "Danelis Soto": {
+            en: {
+                role: "Professional Stylist, Colorist & Hair Treatment Specialist",
+                info: "With more than five years of experience, Danelis Soto excels in haircuts, color changes, advanced hair treatments, hair botox, and blowouts. She is perfectionist, dedicated, and brings exceptional hospitality to the salon. Her spiritual essence, discipline, and kindness make her a central part of daily operations. Her warm personality and technical expertise make every client feel valued and cared for."
+            }
+        },
+        "Jason Agrón": {
+            en: {
+                role: "Founder, Master Barber-Stylist & Creative Director",
+                info: "With over 30 years of experience, Jason Agrón is a master barber and stylist known for impeccable technique, creativity, and industry leadership. He masters all styles—fades, scissor cuts, beard designs, men’s color, blowouts, kids’ cuts, and freestyle designs. Jason’s philosophy: “Nothing is impossible.” He is a multi-award-winning competitor, educator for world-renowned brands, and creator of the ‘Believe’ concept. He leads The Secret Spot PR with excellence, faith, and passion."
+            }
+        },
+        "Saúl Acevedo": {
+            en: {
+                role: "Barber",
+                info: "With over seven years of experience, Saúl brings discipline, professionalism, and a clean, precise technique. Bilingual and highly responsible, he excels in beard grooming, mullets, fades, and traditional shaving. His sports-driven mindset gives him a competitive, focused spirit. Saúl’s organization and dedication make him a solid pillar within The Secret Spot PR."
+            }
+        },
+        "Jeffrey Feliciano": {
+            en: {
+                role: "Barber",
+                info: "With more than five years of experience, Jeffrey is disciplined, precise, and known for maintaining an impeccable workstation. He specializes in scissor cuts and classic styles. Quiet but deeply professional, he connects with clients through respectful service and mastery. Jeffrey embraces new challenges and continues to grow daily, making him a valuable and evolving member of the team."
+            }
+        }
+    };
+
+    const modal = document.getElementById("staffModal");
+    const modalImg = document.getElementById("modalImg");
+    const modalName = document.getElementById("modalName");
+    const modalRole = document.getElementById("modalRole");
+    const modalInfo = document.getElementById("modalInfo");
+
+    if (!modal.classList.contains("show")) return;
+
+    const imgSrc = modalImg.getAttribute("src");
+    const staff = [...document.querySelectorAll(".staff-photo")]
+        .find(p => p.getAttribute("data-img") === imgSrc);
+
+    if (!staff) return;
+
+    const originalName = staff.getAttribute("data-name");
+    const originalRole = staff.getAttribute("data-role");
+    const originalInfo = staff.getAttribute("data-info");
+
+    if (lang === "en" && staffTranslations[originalName]) {
+        modalName.textContent = originalName;
+        modalRole.textContent = staffTranslations[originalName].en.role;
+        modalInfo.innerHTML = staffTranslations[originalName].en.info.replace(/\n/g,"<br>");
+    } else if (lang === "es") {
+        modalName.textContent = originalName;
+        modalRole.textContent = originalRole;
+        modalInfo.innerHTML = originalInfo.replace(/\n/g,"<br>");
+    }
+})();
+
 // --- Dropdown language toggle ---
 const langDropdown = document.querySelector('.lang-dropdown');
 const langToggle = document.querySelector('.lang-toggle');
@@ -783,63 +853,6 @@ document.addEventListener('click', (e) => {
 });
 
 // --- MODAL DE RESEÑA DEL EQUIPO ---
-document.addEventListener('DOMContentLoaded', function() {
-    const staffPhotos = document.querySelectorAll('.staff-photo');
-    const modal = document.getElementById('staffModal');
-    const modalImg = document.getElementById('modalImg');
-    const modalName = document.getElementById('modalName');
-    const modalRole = document.getElementById('modalRole');
-    const modalInfo = document.getElementById('modalInfo');
-    const modalClose = document.querySelector('.modal-close');
-    const navLeft = document.querySelector('.modal-nav-left');
-    const navRight = document.querySelector('.modal-nav-right');
-
-    // Array de datos de los miembros
-    const teamData = Array.from(staffPhotos).map(photo => ({
-        name: photo.getAttribute('data-name') || '',
-        role: photo.getAttribute('data-role') || '',
-        info: photo.getAttribute('data-info') || '',
-        img: photo.getAttribute('data-img') || ''
-    }));
-    let currentIdx = 0;
-
-    function showModal(idx) {
-        const member = teamData[idx];
-        if (!member) return;
-        modalImg.src = member.img;
-        modalImg.alt = member.name;
-        modalName.textContent = member.name;
-        modalRole.textContent = member.role;
-        modalInfo.innerHTML = member.info.replace(/\n/g, '<br>');
-        modal.classList.add('show');
-        currentIdx = idx;
-    }
-
-    staffPhotos.forEach((photo, idx) => {
-        photo.addEventListener('click', function() {
-            showModal(idx);
-        });
-    });
-
-    navLeft.addEventListener('click', function(e) {
-        e.stopPropagation();
-        let prevIdx = (currentIdx - 1 + teamData.length) % teamData.length;
-        showModal(prevIdx);
-    });
-    navRight.addEventListener('click', function(e) {
-        e.stopPropagation();
-        let nextIdx = (currentIdx + 1) % teamData.length;
-        showModal(nextIdx);
-    });
-
-    modalClose.addEventListener('click', function() {
-        modal.classList.remove('show');
-    });
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) modal.classList.remove('show');
-    });
-});
-
 // --- Sistema multiidioma ---
 const langText = {
     es: {
@@ -1009,6 +1022,10 @@ const translationMap = [
 
 function updateLanguage(lang) {
         // Traducción de reseñas del equipo en el modal
+if (typeof window.updateStaffModalLanguage === "function") {
+    window.updateStaffModalLanguage();
+}
+
         const staffModal = document.getElementById('staffModal');
         if (staffModal && staffModal.classList.contains('show')) {
             const modalName = staffModal.querySelector('#modalName');
@@ -1703,18 +1720,97 @@ const modalRole = document.getElementById("modalRole");
 const modalInfo = document.getElementById("modalInfo");
 const modalClose = document.querySelector(".modal-close");
 
-document.querySelectorAll(".staff-photo").forEach(photo => {
+// Traducciones específicas de las reseñas del equipo
+const staffTranslations = {
+    "Zuleina Paredes": {
+        en: {
+            role: "Nail Technician & Pedicure Specialist",
+            info: "With over six years of experience, Zuleina Paredes—affectionately known as Zuly—is one of the most outstanding professionals in the art of manicures and pedicures at The Secret Spot PR. Her precision, attention to detail, and technical excellence have made her a reference for clients seeking beauty, wellness, and lasting results. Perfectionist and dedicated, Zuly masters acrylic, gel, artistic design, and professional pedicure techniques. Beyond her talent, she is known for her warmth, exceptional service, and peaceful energy. Zuly is a key pillar within the salon."
+        }
+    },
+    "Jessica Soto Soto": {
+        en: {
+            role: "Barber & Stylist",
+            info: "With over six years in the industry, Jessica Soto stands out for her technique, energy, and professionalism. She specializes in fades—especially mid and low fades—and curly haircuts, blending precision and creativity. Jessica is highly communicative, spiritual, and constantly growing. She has a unique talent for visualizing the perfect style for clients who are unsure what to choose. Passionate about music, she brings fresh energy and charisma to The Secret Spot PR."
+        }
+    },
+    "Danelis Soto": {
+        en: {
+            role: "Professional Stylist, Colorist & Hair Treatment Specialist",
+            info: "With more than five years of experience, Danelis Soto excels in haircuts, color changes, advanced hair treatments, hair botox, and blowouts. She is perfectionist, dedicated, and brings exceptional hospitality to the salon. Her spiritual essence, discipline, and kindness make her a central part of daily operations. Her warm personality and technical expertise make every client feel valued and cared for."
+        }
+    },
+    " Jason Agrón ": { // OJO: el nombre en tu HTML tiene espacios
+        en: {
+            role: "Founder, Master Barber-Stylist & Creative Director",
+            info: "With over 30 years of experience, Jason Agrón is a master barber and stylist known for impeccable technique, creativity, and industry leadership. He masters all styles—fades, scissor cuts, beard designs, men’s color, blowouts, kids’ cuts, and freestyle designs. Jason’s philosophy: “Nothing is impossible.” He is a multi-award-winning competitor, educator for world-renowned brands, and creator of the ‘Believe’ concept. He leads The Secret Spot PR with excellence, faith, and passion."
+        }
+    },
+    "Saúl Acevedo": {
+        en: {
+            role: "Barber",
+            info: "With over seven years of experience, Saúl brings discipline, professionalism, and a clean, precise technique. Bilingual and highly responsible, he excels in beard grooming, mullets, fades, and traditional shaving. His sports-driven mindset gives him a competitive, focused spirit. Saúl’s organization and dedication make him a solid pillar within The Secret Spot PR."
+        }
+    },
+    "Jeffrey Feliciano": {
+        en: {
+            role: "Barber",
+            info: "With more than five years of experience, Jeffrey is disciplined, precise, and known for maintaining an impeccable workstation. He specializes in scissor cuts and classic styles. Quiet but deeply professional, he connects with clients through respectful service and mastery. Jeffrey embraces new challenges and continues to grow daily, making him a valuable and evolving member of the team."
+        }
+    }
+};
+
+// Función que llena el modal respetando el idioma actual
+function openStaffModalFromPhoto(photo) {
+    const name  = photo.getAttribute("data-name");
+    const role  = photo.getAttribute("data-role");
+    const info  = photo.getAttribute("data-info");
+    const img   = photo.getAttribute("data-img");
+
+    modalImg.src = img;
+    modalImg.alt = name;
+    modalName.textContent = name;
+
+    // Usar traducción en inglés si currentLang === 'en'
+    if (typeof currentLang !== "undefined" && currentLang === "en" && staffTranslations[name]) {
+        modalRole.textContent = staffTranslations[name].en.role;
+        modalInfo.innerHTML   = staffTranslations[name].en.info.replace(/\n/g, "<br>");
+    } else {
+        // Español (o sin traducción)
+        modalRole.textContent = role;
+        modalInfo.innerHTML   = info.replace(/\n/g, "<br>");
+    }
+
+    modal.style.display = "block";
+}
+
+// Click en cada miembro del equipo
+const staffPhotos = Array.from(document.querySelectorAll(".staff-photo"));
+let currentStaffIndex = 0;
+staffPhotos.forEach((photo, idx) => {
     photo.addEventListener("click", () => {
-
-        modalImg.src = photo.getAttribute("data-img");
-        modalName.textContent = photo.getAttribute("data-name");
-        modalRole.textContent = photo.getAttribute("data-role");
-        modalInfo.textContent = photo.getAttribute("data-info");
-
-        modal.style.display = "block";
+        currentStaffIndex = idx;
+        openStaffModalFromPhoto(photo);
     });
 });
 
+// Navegación con flechas en el modal
+const navLeft = document.querySelector('.modal-nav-left');
+const navRight = document.querySelector('.modal-nav-right');
+if (navLeft && navRight) {
+    navLeft.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentStaffIndex = (currentStaffIndex - 1 + staffPhotos.length) % staffPhotos.length;
+        openStaffModalFromPhoto(staffPhotos[currentStaffIndex]);
+    });
+    navRight.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentStaffIndex = (currentStaffIndex + 1) % staffPhotos.length;
+        openStaffModalFromPhoto(staffPhotos[currentStaffIndex]);
+    });
+}
+
+// Cerrar modal
 modalClose.addEventListener("click", () => {
     modal.style.display = "none";
 });
@@ -1723,8 +1819,19 @@ modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.style.display = "none";
 });
 
-</script>
+// OPCIONAL: si quieres que al cambiar idioma y el modal está abierto,
+// se actualice el texto automáticamente, puedes llamar a esto desde updateLanguage:
+window.updateStaffModalLanguage = function() {
+    if (modal.style.display !== "block") return;
+    const currentName = modalName.textContent;
+    const staffPhoto = Array.from(document.querySelectorAll(".staff-photo"))
+        .find(p => p.getAttribute("data-name").trim() === currentName.trim());
+    if (staffPhoto) {
+        openStaffModalFromPhoto(staffPhoto);
+    }
+};
 
+</script>
 
 </body>
 </html>
