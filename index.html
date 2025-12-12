@@ -191,23 +191,18 @@
     <img src="images/trabajos/pedicura.jpg" alt="Servicios">
 </div>
 
-    <!-- MANOS Y PIES / SPA -->
-    <div class="servicios-doble">
-            <h3 class="categoria-titulo">MANOS & PIES</h3>
-        <div class="servicios-grid">
-        
-            <div class="servicio-box">
-                <h4>Manicura Profesional</h4>
-                <p>Acabado limpio y duradero.</p>
-            </div>
-            <div class="servicio-box">
-                <h4>Pedicura Spa</h4>
-                <p>Relajación, suavidad y cuidado profundo.</p>
-            </div>
+       <!-- MANOS Y PIES / SPA -->
+    <h3 class="categoria-titulo">MANOS & PIES</h3>
+    <div class="servicios-grid">
+        <div class="servicio-box">
+            <h4>Manicura Profesional</h4>
+            <p>Acabado limpio y duradero.</p>
         </div>
-      
+        <div class="servicio-box">
+            <h4>Pedicura Spa</h4>
+            <p>Relajación, suavidad y cuidado profundo.</p>
+        </div>
     </div>
-
     <!-- ESTILISMO DAMAS -->
     <h3 class="categoria-titulo">ESTILISMO – DAMAS</h3>
     <div class="servicios-grid">
@@ -1017,6 +1012,8 @@ const translationMap = [
 
 function updateLanguage(lang) {
         // Traducción de reseñas del equipo en el modal
+        traducirServiciosPremium(lang);
+
 if (typeof window.updateStaffModalLanguage === "function") {
     window.updateStaffModalLanguage();
 }
@@ -1168,24 +1165,63 @@ if (typeof window.updateStaffModalLanguage === "function") {
     // Actualiza los textos de servicios premium
     const serviciosSections = document.querySelectorAll('.servicios-premium-section');
     if (serviciosSections.length) {
-        // Manos y Pies / Spa
+        // Títulos de categorías
+        const categoriaTitulos = serviciosSections[0].querySelectorAll('.categoria-titulo');
+        if (categoriaTitulos[0]) categoriaTitulos[0].textContent = (lang === 'en') ? 'HANDS & FEET' : 'MANOS & PIES';
+        if (categoriaTitulos[1]) categoriaTitulos[1].textContent = (lang === 'en') ? 'STYLING – WOMEN' : 'ESTILISMO – DAMAS';
+        if (categoriaTitulos[2]) categoriaTitulos[2].textContent = (lang === 'en') ? 'BARBERING – MEN' : 'BARBERÍA – CABALLEROS';
+
+        // Manos y Pies
         const manosBoxes = serviciosSections[0].querySelectorAll('.servicios-doble .servicio-box');
-        serviciosPremium[0].h4.forEach((txt, i) => {
-            if (manosBoxes[i]) manosBoxes[i].querySelector('h4').textContent = (lang === 'en') ? serviciosPremium[0].h4_en[i] : txt;
-            if (manosBoxes[i]) manosBoxes[i].querySelector('p').textContent = (lang === 'en') ? serviciosPremium[0].p_en[i] : serviciosPremium[0].p[i];
-        });
-        // Damas
-        const damasBoxes = serviciosSections[0].querySelectorAll('.servicios-grid')[0].querySelectorAll('.servicio-box');
-        serviciosPremium[1].h4.forEach((txt, i) => {
-            if (damasBoxes[i]) damasBoxes[i].querySelector('h4').textContent = (lang === 'en') ? serviciosPremium[1].h4_en[i] : txt;
-            if (damasBoxes[i]) damasBoxes[i].querySelector('p').textContent = (lang === 'en') ? serviciosPremium[1].p_en[i] : serviciosPremium[1].p[i];
-        });
-        // Caballeros
-        const caballerosBoxes = serviciosSections[0].querySelectorAll('.servicios-grid')[1].querySelectorAll('.servicio-box');
-        serviciosPremium[2].h4.forEach((txt, i) => {
-            if (caballerosBoxes[i]) caballerosBoxes[i].querySelector('h4').textContent = (lang === 'en') ? serviciosPremium[2].h4_en[i] : txt;
-            if (caballerosBoxes[i]) caballerosBoxes[i].querySelector('p').textContent = (lang === 'en') ? serviciosPremium[2].p_en[i] : serviciosPremium[2].p[i];
-        });
+        if (manosBoxes[0]) {
+            manosBoxes[0].querySelector('h4').textContent = (lang === 'en') ? 'Professional Manicure' : 'Manicura Profesional';
+            manosBoxes[0].querySelector('p').textContent = (lang === 'en') ? 'Clean and long-lasting finish.' : 'Acabado limpio y duradero.';
+        }
+        if (manosBoxes[1]) {
+            manosBoxes[1].querySelector('h4').textContent = (lang === 'en') ? 'Spa Pedicure' : 'Pedicura Spa';
+            manosBoxes[1].querySelector('p').textContent = (lang === 'en') ? 'Relaxation, softness, and deep care.' : 'Relajación, suavidad y cuidado profundo.';
+        }
+
+        // Estilismo Damas
+        const damasGrid = serviciosSections[0].querySelectorAll('.servicios-grid')[0];
+        if (damasGrid) {
+            const damasBoxes = damasGrid.querySelectorAll('.servicio-box');
+            if (damasBoxes[0]) {
+                damasBoxes[0].querySelector('h4').textContent = (lang === 'en') ? 'Modern Cuts & Styles' : 'Cortes y Estilos Modernos';
+                damasBoxes[0].querySelector('p').textContent = (lang === 'en') ? 'Elegant looks that highlight your beauty.' : 'Looks elegantes que resaltan tu belleza.';
+            }
+            if (damasBoxes[1]) {
+                damasBoxes[1].querySelector('h4').textContent = (lang === 'en') ? 'Blowout Bar' : 'Blowout Bar';
+                damasBoxes[1].querySelector('p').textContent = (lang === 'en') ? 'Volume, shine, and a polished finish.' : 'Volumen, brillo y acabado pulido.';
+            }
+        }
+
+        // Barbería Caballeros
+        // Encuentra el h3 con el texto 'BARBERÍA – CABALLEROS' y su siguiente .servicios-grid
+        const caballerosTitulo = Array.from(serviciosSections[0].querySelectorAll('.categoria-titulo')).find(el => el.textContent.trim().toUpperCase().includes('CABALLEROS'));
+        if (caballerosTitulo) {
+            caballerosTitulo.textContent = (lang === 'en') ? 'BARBERING – MEN' : 'BARBERÍA – CABALLEROS';
+            const caballerosGrid = caballerosTitulo.nextElementSibling;
+            if (caballerosGrid && caballerosGrid.classList.contains('servicios-grid')) {
+                const caballerosBoxes = caballerosGrid.querySelectorAll('.servicio-box');
+                if (caballerosBoxes[0]) {
+                    caballerosBoxes[0].querySelector('h4').textContent = (lang === 'en') ? 'Trendy Cuts' : 'Cortes en Tendencia';
+                    caballerosBoxes[0].querySelector('p').textContent = (lang === 'en') ? 'Modern, clean, and defined styles.' : 'Estilos modernos, limpios y definidos.';
+                }
+                if (caballerosBoxes[1]) {
+                    caballerosBoxes[1].querySelector('h4').textContent = (lang === 'en') ? 'Modern Cuts & Styles' : 'Cortes y Estilos Modernos';
+                    caballerosBoxes[1].querySelector('p').textContent = (lang === 'en') ? 'Elegant looks that highlight your beauty.' : 'Looks elegantes que resaltan tu belleza.';
+                }
+                if (caballerosBoxes[2]) {
+                    caballerosBoxes[2].querySelector('h4').textContent = (lang === 'en') ? 'Beard Grooming' : 'Arreglo de Barba';
+                    caballerosBoxes[2].querySelector('p').textContent = (lang === 'en') ? 'Professional design and finishing.' : 'Diseño y terminaciones profesionales.';
+                }
+                if (caballerosBoxes[3]) {
+                    caballerosBoxes[3].querySelector('h4').textContent = (lang === 'en') ? 'Color & Highlights' : 'Color & Highlights';
+                    caballerosBoxes[3].querySelector('p').textContent = (lang === 'en') ? 'Vibrant, healthy, and professional finish.' : 'Acabado vibrante, saludable y profesional.';
+                }
+            }
+        }
     }
 
     // About paragraphs
@@ -1380,6 +1416,93 @@ document.addEventListener('DOMContentLoaded', function(){
     vid.muted = true;
     try { vid.play(); } catch(e) { /* ignore */ }
 });
+
+
+
+function traducirServiciosPremium(lang) {
+
+    const categorias = document.querySelectorAll('.categoria-titulo');
+
+    categorias.forEach(titulo => {
+        const texto = titulo.textContent.toUpperCase().trim();
+        const grid = titulo.nextElementSibling;
+
+        if (!grid || !grid.classList.contains('servicios-grid')) return;
+
+        const boxes = grid.querySelectorAll('.servicio-box');
+
+        // ================= HANDS & FEET =================
+        if (texto.includes('MANOS') || texto.includes('HANDS')) {
+            titulo.textContent = (lang === 'en') ? 'HANDS & FEET' : 'MANOS & PIES';
+
+            if (boxes[0]) {
+                boxes[0].querySelector('h4').textContent =
+                    (lang === 'en') ? 'Professional Manicure' : 'Manicura Profesional';
+                boxes[0].querySelector('p').textContent =
+                    (lang === 'en') ? 'Clean and long-lasting finish.' : 'Acabado limpio y duradero.';
+            }
+
+            if (boxes[1]) {
+                boxes[1].querySelector('h4').textContent =
+                    (lang === 'en') ? 'Spa Pedicure' : 'Pedicura Spa';
+                boxes[1].querySelector('p').textContent =
+                    (lang === 'en') ? 'Relaxation, softness, and deep care.' : 'Relajación, suavidad y cuidado profundo.';
+            }
+        }
+
+        // ================= STYLING – WOMEN =================
+        if (texto.includes('DAMAS') || texto.includes('WOMEN')) {
+            titulo.textContent = (lang === 'en') ? 'STYLING – WOMEN' : 'ESTILISMO – DAMAS';
+
+            if (boxes[0]) {
+                boxes[0].querySelector('h4').textContent =
+                    (lang === 'en') ? 'Modern Cuts & Styles' : 'Cortes y Estilos Modernos';
+                boxes[0].querySelector('p').textContent =
+                    (lang === 'en') ? 'Elegant looks that highlight your beauty.' : 'Looks elegantes que resaltan tu belleza.';
+            }
+
+            if (boxes[1]) {
+                boxes[1].querySelector('h4').textContent =
+                    'Blowout Bar';
+                boxes[1].querySelector('p').textContent =
+                    (lang === 'en') ? 'Volume, shine, and a polished finish.' : 'Volumen, brillo y acabado pulido.';
+            }
+        }
+
+        // ================= BARBERING – MEN =================
+        if (texto.includes('CABALLEROS') || texto.includes('MEN')) {
+            titulo.textContent = (lang === 'en') ? 'BARBERING – MEN' : 'BARBERÍA – CABALLEROS';
+
+            if (boxes[0]) {
+                boxes[0].querySelector('h4').textContent =
+                    (lang === 'en') ? 'Trendy Cuts' : 'Cortes en Tendencia';
+                boxes[0].querySelector('p').textContent =
+                    (lang === 'en') ? 'Modern, clean, and defined styles.' : 'Estilos modernos, limpios y definidos.';
+            }
+
+            if (boxes[1]) {
+                boxes[1].querySelector('h4').textContent =
+                    (lang === 'en') ? 'Modern Cuts & Styles' : 'Cortes y Estilos Modernos';
+                boxes[1].querySelector('p').textContent =
+                    (lang === 'en') ? 'Elegant looks that highlight your beauty.' : 'Looks elegantes que resaltan tu belleza.';
+            }
+
+            if (boxes[2]) {
+                boxes[2].querySelector('h4').textContent =
+                    (lang === 'en') ? 'Beard Grooming' : 'Arreglo de Barba';
+                boxes[2].querySelector('p').textContent =
+                    (lang === 'en') ? 'Professional design and finishing.' : 'Diseño y terminaciones profesionales.';
+            }
+
+            if (boxes[3]) {
+                boxes[3].querySelector('h4').textContent = 'Color & Highlights';
+                boxes[3].querySelector('p').textContent =
+                    (lang === 'en') ? 'Vibrant, healthy, and professional finish.' : 'Acabado vibrante, saludable y profesional.';
+            }
+        }
+    });
+}
+
 </script>
 
 
