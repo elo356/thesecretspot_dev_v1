@@ -29,6 +29,61 @@
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
     <style>
+    /* 2x2 grid for servicios-fotos */
+    #servicios-fotos.servicios-grid-2x2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 2.2rem;
+        justify-items: center;
+        align-items: center;
+        margin: 2.5rem 0 3.5rem 0;
+        width: 100%;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #servicios-fotos.servicios-grid-2x2 img.servicio-img {
+        width: 100%;
+        max-width: 320px;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 1.3rem;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+        background: #f7f7f7;
+        transition: transform 0.2s;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #servicios-fotos.servicios-grid-2x2 img.servicio-img:hover {
+        transform: scale(1.06);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+    }
+    @media (max-width: 900px) {
+        #servicios-fotos.servicios-grid-2x2 {
+            max-width: 98vw;
+            gap: 1.2rem;
+        }
+        #servicios-fotos.servicios-grid-2x2 img.servicio-img {
+            max-width: 180px;
+            border-radius: 1rem;
+        }
+    }
+    @media (max-width: 600px) {
+        #servicios-fotos.servicios-grid-2x2 {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(2, 1fr);
+            gap: 0.7rem;
+            max-width: 99vw;
+        }
+        #servicios-fotos.servicios-grid-2x2 img.servicio-img {
+            max-width: 110px;
+            border-radius: 0.7rem;
+        }
+    }
+    </style>
+    <style>
     .audio-toggle{position:absolute;right:1.25rem;top:1.25rem;background:rgba(0,0,0,0.6);color:#fff;padding:0.5rem 0.75rem;border-radius:0.5rem;font-weight:600;cursor:pointer;z-index:20}
     .hero{position:relative}
     </style>
@@ -185,11 +240,9 @@
 
   <h2 class="titulo-principal">SERVICIOS PREMIUM</h2>
   <p class="descripcion-intro">Cuidamos tu estilo. Cuidamos tu experiencia.</p>
-<div class="collage-cuadrado">
-    <img src="images/trabajos/hombre3.jpg" alt="Servicios">
-    <img src="images/trabajos/mujer3.jpg" alt="Servicios">
-    <img src="images/trabajos/nino3.jpg" alt="Servicios">
-    <img src="images/trabajos/pedicura.jpg" alt="Servicios">
+<div class="collage-cuadrado" style="display: flex; justify-content: center; align-items: center; min-height: 420px;">
+    <!-- Las imágenes de servicios se cargarán dinámicamente desde la API -->
+    <div id="servicios-fotos"></div>
 </div>
 
        <!-- MANOS Y PIES / SPA -->
@@ -1683,13 +1736,23 @@ async function cargarContenido() {
 
 
 
-    // -----------------------------------------
-    // 2. SERVICIOS (4 imágenes)
-    // -----------------------------------------
-    const serviciosImgs = document.querySelectorAll(".servicios-imagenes .img-box img");
-    data.servicios.slice(0, 4).forEach((url, i) => {
-        if (serviciosImgs[i]) serviciosImgs[i].src = url;
-    });
+
+    // ----------------------------------------- 
+    // 2. SERVICIOS (imágenes dinámicas)
+    // ----------------------------------------- 
+    const serviciosFotosDiv = document.getElementById("servicios-fotos");
+    if (serviciosFotosDiv && Array.isArray(data.servicios)) {
+        serviciosFotosDiv.innerHTML = "";
+        serviciosFotosDiv.classList.add("servicios-grid-2x2");
+        data.servicios.slice(0, 4).forEach((url, i) => {
+            const img = document.createElement("img");
+            img.src = url;
+            img.alt = `Servicio ${i+1}`;
+            img.className = "servicio-img";
+            img.loading = "lazy";
+            serviciosFotosDiv.appendChild(img);
+        });
+    }
 
     // -----------------------------------------
     // 3. SOBRE NOSOTROS
