@@ -1049,6 +1049,17 @@ if (typeof window.updateStaffModalLanguage === "function") {
 
     // Apply translations via selectors map
     translationMap.forEach(entry => {
+        // Special handling for nav menu links (multiple <a> tags)
+        if (entry.selector.startsWith('nav .nav-links a')) {
+            const navLinks = document.querySelectorAll('nav .nav-links a');
+            const navKeys = ['inicio', 'servicios', 'nosotros', 'galeria', 'contacto'];
+            navLinks.forEach((el, i) => {
+                if (langText[lang][navKeys[i]]) {
+                    el.innerHTML = langText[lang][navKeys[i]];
+                }
+            });
+            return;
+        }
         const el = document.querySelector(entry.selector);
         if (!el) return;
         const val = langText[lang][entry.key];
