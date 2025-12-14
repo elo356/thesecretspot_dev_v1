@@ -416,7 +416,7 @@ Danelis representa compromiso, excelencia y calidez humana. Su pasión por la be
     </div>
 
     <div class="staff-photo" 
-         data-name=" Jason Agrón "
+         data-name="Jason Agrón"
          data-role="Fundador, Barbero Estilista & Director Creativo de The Secret Spot PR"
          data-info="Con más de 30 años de experiencia, Jason Agrón es un maestro barbero y estilista reconocido por su técnica impecable, su creatividad y su visión innovadora dentro de la industria de la belleza masculina y femenina. Domina todos los estilos de cortes, incluyendo fades, corte con tijera, diseños de barba, color para caballeros, blowouts, cortes para niños y diseños freestyle y modernos.
 
@@ -461,7 +461,7 @@ Su responsabilidad, su disciplina y su dominio técnico lo convierten en un barb
 
  <div class="staff-photo" 
          data-name="Jeffrey Feliciano"
-         data-role="Barbero"
+         data-role="Barbero
          data-info="Con más de cinco años de experiencia, Jeffrey Feliciano forma parte esencial del equipo de The Secret Spot PR. Es un barbero disciplinado, conocido por mantener siempre su estación impecable y por su enfoque serio y profesional en cada servicio.
 
 Su especialidad está en los cortes con tijera y los estilos clásicos, donde demuestra precisión, técnica y una atención al detalle que lo distingue. Aunque es una persona callada y reservada, Jeffrey tiene un talento natural para conectar con sus clientes a través de su trato respetuoso y su compromiso por ofrecer siempre lo mejor.
@@ -966,6 +966,7 @@ const langText = {
         payment_title: "Payment Methods",
         footer_copy: "© 2024 The Secret Spot - Grooming Studio. All rights reserved.",
         footer_location: "Isabela, Puerto Rico | Premium Styling Since 2019",
+
     }
 };
 
@@ -1005,33 +1006,6 @@ function updateLanguage(lang) {
 if (typeof window.updateStaffModalLanguage === "function") {
     window.updateStaffModalLanguage();
 }
-
-        const staffModal = document.getElementById('staffModal');
-        if (staffModal && staffModal.classList.contains('show')) {
-            const modalName = staffModal.querySelector('#modalName');
-            const modalRole = staffModal.querySelector('#modalRole');
-            const modalInfo = staffModal.querySelector('#modalInfo');
-            const modalBtn = staffModal.querySelector('.btn-agendar-modal');
-            // Traducciones (ejemplo, puedes expandir con más miembros)
-            const staffTranslations = {
-                'Zuleina Paredes': {
-                    en: {
-                        name: 'Zuleina Paredes',
-                        role: 'Nail Technician & Pedicure Specialist',
-                        info: 'With over six years of experience, Zuleina Paredes—affectionately known as Zuly—is one of the most outstanding professionals in the art of manicures and pedicures at The Secret Spot PR. Her precision, attention to detail, and technical excellence have made her a reference for clients seeking beauty, wellness, and lasting results. Perfectionist and dedicated, Zuly masters techniques in acrylic, gel, artistic design, and professional pedicure. Beyond her skill, Zuleina is recognized for her exceptional treatment, warmth, and the peaceful atmosphere she provides. Professional, kind, and deeply responsible, she is an essential pillar within the salon.'
-                    }
-                }
-                // Agrega más miembros aquí si lo deseas
-            };
-            if (modalName && staffTranslations[modalName.textContent] && lang === 'en') {
-                modalName.textContent = staffTranslations[modalName.textContent].en.name;
-                modalRole.textContent = staffTranslations[modalName.textContent].en.role;
-                modalInfo.textContent = staffTranslations[modalName.textContent].en.info;
-            }
-            if (modalBtn) {
-                modalBtn.textContent = (lang === 'en') ? 'Book Appointment' : 'Agendar Cita';
-            }
-        }
     currentLang = lang;
     localStorage.setItem('tss_lang', lang);
 
@@ -1851,24 +1825,28 @@ const modalClose = document.querySelector(".modal-close");
 const staffTranslations = {
     "Zuleina Paredes": {
         en: {
+            name: "Zuleina Paredes",
             role: "Nail Technician & Pedicure Specialist",
             info: "With over six years of experience, Zuleina Paredes—affectionately known as Zuly—is one of the most outstanding professionals in the art of manicures and pedicures at The Secret Spot PR. Her precision, attention to detail, and technical excellence have made her a reference for clients seeking beauty, wellness, and lasting results. Perfectionist and dedicated, Zuly masters acrylic, gel, artistic design, and professional pedicure techniques. Beyond her talent, she is known for her warmth, exceptional service, and peaceful energy. Zuly is a key pillar within the salon."
         }
     },
     "Jessica Soto Soto": {
         en: {
+            name: "Jessica Soto Soto",
             role: "Barber & Stylist",
             info: "With over six years in the industry, Jessica Soto stands out for her technique, energy, and professionalism. She specializes in fades—especially mid and low fades—and curly haircuts, blending precision and creativity. Jessica is highly communicative, spiritual, and constantly growing. She has a unique talent for visualizing the perfect style for clients who are unsure what to choose. Passionate about music, she brings fresh energy and charisma to The Secret Spot PR."
         }
     },
     "Danelis Soto": {
         en: {
+            name: "Danelis Soto",
             role: "Professional Stylist, Colorist & Hair Treatment Specialist",
             info: "With more than five years of experience, Danelis Soto excels in haircuts, color changes, advanced hair treatments, hair botox, and blowouts. She is perfectionist, dedicated, and brings exceptional hospitality to the salon. Her spiritual essence, discipline, and kindness make her a central part of daily operations. Her warm personality and technical expertise make every client feel valued and cared for."
         }
     },
-    " Jason Agrón ": { // OJO: el nombre en tu HTML tiene espacios
+    "Jason Agrón": { 
         en: {
+            name: "Jason Agrón",
             role: "Founder, Master Barber-Stylist & Creative Director",
             info: "With over 30 years of experience, Jason Agrón is a master barber and stylist renowned for his impeccable technique, creativity, and innovative vision within the men's and women's beauty industry. He is proficient in all haircut styles, including fades, scissor cuts, beard designs, men's color, blowouts, children's cuts, and freestyle and modern designs Jason operates with a firm conviction: For me, nothing is impossible. When a client brings an idea or a photo, he responds with a positive attitude, excellence, and total commitment until the ideal result is achieved. He is recognized for his patience, motivation, focus, spirituality, perfectionism, and attention to detail. For Jason, the details make all the difference, and this philosophy is reflected in every service and in the leadership he provides within the salon. His professional career also includes outstanding achievements: Jason has won numerous barbering and styling competitions in both Puerto Rico and the United States, competing among the best and demonstrating his technical skill, precision, and creativity on stage. As an educator and influential figure in the industry, he has represented renowned brands such as Rolda, RedOne, JRL, Johnny B, Turbo Power, and many others, sharing his knowledge at seminars, workshops, and professional events throughout Puerto Rico and beyond. Jason is also the creator of the Believe concept, a message that inspires his team and clients. For him, believing means recognizing the talent God places in each person, entrusting it to His hands, and developing it with love and discipline to achieve extraordinary results. Today, as founder and creative director of The Secret Spot PR, Jason combines advanced technique, values, creativity, and a family atmosphere to offer a unique experience where image, faith, and excellence converge."
         }
@@ -1876,12 +1854,14 @@ const staffTranslations = {
         
     "Saúl Acevedo": {
         en: {
+            name: "Saúl Acevedo",
             role: "Barber",
             info: "With over seven years of experience, Saúl brings discipline, professionalism, and a clean, precise technique. Bilingual and highly responsible, he excels in beard grooming, mullets, fades, and traditional shaving. His sports-driven mindset gives him a competitive, focused spirit. Saúl’s organization and dedication make him a solid pillar within The Secret Spot PR."
         }
     },
     "Jeffrey Feliciano": {
         en: {
+            name: "Jeffrey Feliciano",
             role: "Barber",
             info: "With more than five years of experience, Jeffrey is disciplined, precise, and known for maintaining an impeccable workstation. He specializes in scissor cuts and classic styles. Quiet but deeply professional, he connects with clients through respectful service and mastery. Jeffrey embraces new challenges and continues to grow daily, making him a valuable and evolving member of the team."
         }
@@ -1890,7 +1870,7 @@ const staffTranslations = {
 
 // Función que llena el modal respetando el idioma actual
 function openStaffModalFromPhoto(photo) {
-    const name  = photo.getAttribute("data-name");
+    const name  = photo.getAttribute("data-name").trim();
     const role  = photo.getAttribute("data-role");
     const info  = photo.getAttribute("data-info");
     const img   = photo.getAttribute("data-img");
