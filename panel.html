@@ -312,21 +312,50 @@ let state = {
     galeria:[]
 };
 
+function normalizeContent(data = {}) {
+    return {
+        header_video: typeof data.header_video === "string" ? data.header_video : "",
+        servicios: Array.isArray(data.servicios) ? data.servicios : [],
+        sobre_nosotros: typeof data.sobre_nosotros === "string" ? data.sobre_nosotros : "",
+        foto_grupal: typeof data.foto_grupal === "string" ? data.foto_grupal : "",
+        equipo: Array.isArray(data.equipo) ? data.equipo : [],
+        galeria: Array.isArray(data.galeria) ? data.galeria : []
+    };
+}
+
 async function fetchContent(){
     try{
         setStatus("Cargando contenido...");
         const r = await authorizedFetch(`${API}/content`);
         if(!r.ok) throw new Error(`HTTP ${r.status}`);
-        state = await r.json();
+        const data = await r.json();
+        state = normalizeContent(data);
         renderAll();
         setStatus("Contenido cargado.");
     } catch(e){
-        setStatus("Error cargando contenido. Revisa token/API.");
+        console.error("Error cargando contenido:", e);
+        const detail = e?.message ? ` (${e.message})` : "";
+        setStatus(`Error cargando contenido${detail}.`);
     }
 }
 
 function showLoader(msg){ const l=document.getElementById("uploadLoader"); l.textContent="⏳ "+msg; l.style.display="block"; }
 function hideLoader(){ document.getElementById("uploadLoader").style.display="none"; }
+
+async function getErrorDetail(response) {
+    try {
+        const contentType = response.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+            const data = await response.json();
+            return data?.detail || data?.message || `HTTP ${response.status}`;
+        }
+
+        const text = (await response.text()).trim();
+        return text || `HTTP ${response.status}`;
+    } catch (_) {
+        return `HTTP ${response.status}`;
+    }
+}
 
 async function uploadImage(section,inputId){
     const f=document.getElementById(inputId).files[0];
@@ -339,7 +368,10 @@ async function uploadImage(section,inputId){
 
     const r= await authorizedFetch(`${API}/upload-image`,{method:"POST",body:fd});
     hideLoader();
-    if(!r.ok) return alert(`Error al subir (HTTP ${r.status})`);
+    if(!r.ok) {
+        const detail = await getErrorDetail(r);
+        return alert(`Error al subir: ${detail}`);
+    }
 
     document.getElementById(inputId).value="";
     fetchContent();
@@ -359,7 +391,10 @@ async function uploadGaleria(){
 
     const r= await authorizedFetch(`${API}/upload-image`,{method:"POST",body:fd});
     hideLoader();
-    if(!r.ok) return alert(`Error al subir a galería (HTTP ${r.status})`);
+    if(!r.ok) {
+        const detail = await getErrorDetail(r);
+        return alert(`Error al subir a galería: ${detail}`);
+    }
 
     document.getElementById("galeriaFile").value="";
     fetchContent();
@@ -375,7 +410,10 @@ async function uploadVideo(){
 
     const r= await authorizedFetch(`${API}/upload-video`,{method:"POST",body:fd});
     hideLoader();
-    if(!r.ok) return alert(`Error al subir el video (HTTP ${r.status})`);
+    if(!r.ok) {
+        const detail = await getErrorDetail(r);
+        return alert(`Error al subir el video: ${detail}`);
+    }
 
     fetchContent();
 }
@@ -387,7 +425,10 @@ async function deleteImage(section,url){
         method:"DELETE"
     });
 
-    if(!r.ok) return alert("Error eliminando");
+    if(!r.ok) {
+        const detail = await getErrorDetail(r);
+        return alert(`Error eliminando: ${detail}`);
+    }
     fetchContent();
 }
 
@@ -424,8 +465,9 @@ function renderFotoGrupal(){
 }
 
 function renderServicios(){
+    const servicios = Array.isArray(state.servicios) ? state.servicios : [];
     document.getElementById("serviciosPreview").innerHTML =
-        state.servicios.map(url => `
+        servicios.map(url => `
         <div class="preview-item">
             <img src="${url}">
             <button class="secondary action" onclick="deleteImage('servicios','${url}')">Eliminar</button>
@@ -433,8 +475,9 @@ function renderServicios(){
 }
 
 function renderEquipo(){
+    const equipo = Array.isArray(state.equipo) ? state.equipo : [];
     document.getElementById("equipoPreview").innerHTML =
-        state.equipo.map(url => `
+        equipo.map(url => `
         <div class="preview-item">
             <img src="${url}">
             <button class="secondary action" onclick="deleteImage('equipo','${url}')">Eliminar</button>
@@ -443,14 +486,15 @@ function renderEquipo(){
 
 function renderGaleria(){
     const filter=document.getElementById("galeriaFilter");
+    const galeria = Array.isArray(state.galeria) ? state.galeria : [];
     filter.innerHTML=`<option value="all">Todas</option>`;
 
-    [...new Set(state.galeria.map(g=>g.categoria))].forEach(cat=>{
+    [...new Set(galeria.map(g=>g.categoria).filter(Boolean))].forEach(cat=>{
         filter.innerHTML+=`<option value="${cat}">${cat}</option>`;
     });
 
     const f=filter.value;
-    const imgs=f==="all"?state.galeria:state.galeria.filter(g=>g.categoria===f);
+    const imgs=f==="all"?galeria:galeria.filter(g=>g.categoria===f);
 
     document.getElementById("galeriaPreview").innerHTML =
         imgs.map(img=>`
