@@ -298,7 +298,8 @@ function setStatus(t){ document.getElementById("status").textContent=t; }
 
 async function authorizedFetch(url,options={}) {
     options.headers = options.headers || {};
-    options.headers["Authorization"] = TOKEN;
+    const authToken = TOKEN && TOKEN.startsWith("Bearer ") ? TOKEN : `Bearer ${TOKEN}`;
+    options.headers["Authorization"] = authToken;
     return fetch(url,options);
 }
 
@@ -315,11 +316,12 @@ async function fetchContent(){
     try{
         setStatus("Cargando contenido...");
         const r = await authorizedFetch(`${API}/content`);
+        if(!r.ok) throw new Error(`HTTP ${r.status}`);
         state = await r.json();
         renderAll();
         setStatus("Contenido cargado.");
     } catch(e){
-        setStatus("Error cargando contenido.");
+        setStatus("Error cargando contenido. Revisa token/API.");
     }
 }
 
@@ -335,9 +337,9 @@ async function uploadImage(section,inputId){
     fd.append("section",section);
     fd.append("file",f);
 
-    const r= await fetch(`${API}/upload-image`,{method:"POST",body:fd});
+    const r= await authorizedFetch(`${API}/upload-image`,{method:"POST",body:fd});
     hideLoader();
-    if(!r.ok) return alert("Error al subir");
+    if(!r.ok) return alert(`Error al subir (HTTP ${r.status})`);
 
     document.getElementById(inputId).value="";
     fetchContent();
@@ -355,9 +357,9 @@ async function uploadGaleria(){
     fd.append("categoria",cat);
     fd.append("file",f);
 
-    const r= await fetch(`${API}/upload-image`,{method:"POST",body:fd});
+    const r= await authorizedFetch(`${API}/upload-image`,{method:"POST",body:fd});
     hideLoader();
-    if(!r.ok) return alert("Error");
+    if(!r.ok) return alert(`Error al subir a galería (HTTP ${r.status})`);
 
     document.getElementById("galeriaFile").value="";
     fetchContent();
@@ -371,9 +373,9 @@ async function uploadVideo(){
     const fd=new FormData();
     fd.append("file",f);
 
-    const r= await fetch(`${API}/upload-video`,{method:"POST",body:fd});
+    const r= await authorizedFetch(`${API}/upload-video`,{method:"POST",body:fd});
     hideLoader();
-    if(!r.ok) return alert("Error al subir el video");
+    if(!r.ok) return alert(`Error al subir el video (HTTP ${r.status})`);
 
     fetchContent();
 }
@@ -381,7 +383,7 @@ async function uploadVideo(){
 async function deleteImage(section,url){
     if(!confirm("¿Eliminar imagen?")) return;
 
-    const r= await authorizedFetch(`${API}/delete-image?section=${section}&url=${url}`,{
+    const r= await authorizedFetch(`${API}/delete-image?section=${encodeURIComponent(section)}&url=${encodeURIComponent(url)}`,{
         method:"DELETE"
     });
 
