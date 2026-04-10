@@ -1662,6 +1662,12 @@ filterButtons.forEach(button => {
    <script>
 const API = "https://api.ladiesandmengrooming.com";
 
+function resolveAssetUrl(url) {
+    if (!url) return "";
+    if (/^https?:\/\//i.test(url)) return url;
+    return `${API}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
 
 
 // =======================================================
@@ -1678,7 +1684,7 @@ async function cargarContenido() {
 // 1. VIDEO DEL HEADER — carga estable
 // 1. VIDEO DEL HEADER — carga estable y universal
         if (data.header_video) {
-    const newVideoURL = data.header_video;
+    const newVideoURL = resolveAssetUrl(data.header_video);
     console.log("Cambiando video a:", newVideoURL);
 
     const video = document.getElementById("hero-video");
@@ -1729,7 +1735,7 @@ async function cargarContenido() {
         serviciosFotosDiv.classList.add("servicios-grid-2x2");
         data.servicios.slice(0, 4).forEach((url, i) => {
             const img = document.createElement("img");
-            img.src = url;
+            img.src = resolveAssetUrl(url);
             img.alt = `Servicio ${i+1}`;
             img.className = "servicio-img";
             img.loading = "lazy";
@@ -1742,7 +1748,7 @@ async function cargarContenido() {
     // -----------------------------------------
     if (data.sobre_nosotros) {
         const img = document.querySelector(".about-image img");
-        if (img) img.src = data.sobre_nosotros;
+        if (img) img.src = resolveAssetUrl(data.sobre_nosotros);
     }
 
     // -----------------------------------------
@@ -1750,7 +1756,7 @@ async function cargarContenido() {
     // -----------------------------------------
     if (data.foto_grupal) {
         const img = document.querySelector(".team-group-photo img");
-        if (img) img.src = data.foto_grupal;
+        if (img) img.src = resolveAssetUrl(data.foto_grupal);
     }
 
     // -----------------------------------------
@@ -1758,7 +1764,7 @@ async function cargarContenido() {
     // -----------------------------------------
     const equipoImgs = document.querySelectorAll(".team-photos .staff-photo img");
     data.equipo.slice(0, 6).forEach((url, i) => {
-        if (equipoImgs[i]) equipoImgs[i].src = url;
+        if (equipoImgs[i]) equipoImgs[i].src = resolveAssetUrl(url);
     });
 
     // -----------------------------------------
@@ -1771,7 +1777,7 @@ async function cargarContenido() {
         galeriaContainer.innerHTML += `
             <div class="gallery-item" data-category="${item.categoria}">
                 <span class="gallery-category">${categoriaNombre(item.categoria)}</span>
-                <img src="${item.url}" loading="lazy">
+                <img src="${resolveAssetUrl(item.url)}" loading="lazy">
                 <div class="gallery-overlay">
                     <div>
                         <h4>${categoriaNombre(item.categoria)}</h4>
