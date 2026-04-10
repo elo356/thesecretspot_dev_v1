@@ -112,6 +112,12 @@ main {
     margin: 0 0 10px;
 }
 
+.note {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #b45309;
+}
+
 input, select {
     width: 100%;
     padding: 10px;
@@ -200,6 +206,7 @@ button.secondary {
             <h2>Video del Header</h2>
             <input type="file" id="videoHeaderFile" accept="video/mp4">
             <button class="action" onclick="uploadVideo()">Subir Video</button>
+            <div class="note">El backend está rechazando el video actual por tamaño del archivo.</div>
             <div id="headerVideoPreview"></div>
         </section>
 
@@ -207,6 +214,7 @@ button.secondary {
             <h2>Sobre Nosotros</h2>
             <input type="file" id="sobreNosotrosFile">
             <button class="action" onclick="uploadImage('sobre_nosotros','sobreNosotrosFile')">Subir</button>
+            <div class="note">Esta sección todavía no está habilitada en la API.</div>
             <div class="preview-list" id="sobreNosotrosPreview"></div>
         </section>
 
@@ -214,6 +222,7 @@ button.secondary {
             <h2>Foto Grupal</h2>
             <input type="file" id="fotoGrupalFile">
             <button class="action" onclick="uploadImage('foto_grupal','fotoGrupalFile')">Subir</button>
+            <div class="note">Esta sección todavía no está habilitada en la API.</div>
             <div class="preview-list" id="fotoGrupalPreview"></div>
         </section>
 
@@ -221,6 +230,7 @@ button.secondary {
             <h2>Servicios</h2>
             <input type="file" id="serviciosFile">
             <button class="action" onclick="uploadImage('servicios','serviciosFile')">Añadir</button>
+            <div class="note">Esta sección todavía no está habilitada en la API.</div>
             <div class="preview-scroll">
                 <div class="preview-list" id="serviciosPreview"></div>
             </div>
@@ -230,6 +240,7 @@ button.secondary {
             <h2>Equipo</h2>
             <input type="file" id="equipoFile">
             <button class="action" onclick="uploadImage('equipo','equipoFile')">Añadir</button>
+            <div class="note">Esta sección todavía no está habilitada en la API.</div>
             <div class="preview-scroll">
                 <div class="preview-list" id="equipoPreview"></div>
             </div>
@@ -295,6 +306,12 @@ const API="https://api.ladiesandmengrooming.com";
 const TOKEN=localStorage.getItem("panel_token");
 
 function setStatus(t){ document.getElementById("status").textContent=t; }
+
+function resolveAssetUrl(url) {
+    if (!url) return "";
+    if (/^https?:\/\//i.test(url)) return url;
+    return `${API}${url.startsWith("/") ? "" : "/"}${url}`;
+}
 
 async function authorizedFetch(url,options={}) {
     options.headers = options.headers || {};
@@ -443,14 +460,14 @@ function renderAll(){
 
 function renderHeaderVideo(){
     document.getElementById("headerVideoPreview").innerHTML =
-        state.header_video ? `<video src="${API}${state.header_video}" controls style="width:100%;border-radius:8px"></video>` : "";
+        state.header_video ? `<video src="${resolveAssetUrl(state.header_video)}" controls style="width:100%;border-radius:8px"></video>` : "";
 }
 
 function renderSobreNosotros(){
     document.getElementById("sobreNosotrosPreview").innerHTML =
         state.sobre_nosotros ? `
         <div class="preview-item">
-            <img src="${state.sobre_nosotros}">
+            <img src="${resolveAssetUrl(state.sobre_nosotros)}">
             <button class="secondary action" onclick="deleteImage('sobre_nosotros','${state.sobre_nosotros}')">Eliminar</button>
         </div>` : "";
 }
@@ -459,7 +476,7 @@ function renderFotoGrupal(){
     document.getElementById("fotoGrupalPreview").innerHTML=
         state.foto_grupal ? `
         <div class="preview-item">
-            <img src="${state.foto_grupal}">
+            <img src="${resolveAssetUrl(state.foto_grupal)}">
             <button class="secondary action" onclick="deleteImage('foto_grupal','${state.foto_grupal}')">Eliminar</button>
         </div>`:"";
 }
@@ -469,7 +486,7 @@ function renderServicios(){
     document.getElementById("serviciosPreview").innerHTML =
         servicios.map(url => `
         <div class="preview-item">
-            <img src="${url}">
+            <img src="${resolveAssetUrl(url)}">
             <button class="secondary action" onclick="deleteImage('servicios','${url}')">Eliminar</button>
         </div>`).join("");
 }
@@ -479,7 +496,7 @@ function renderEquipo(){
     document.getElementById("equipoPreview").innerHTML =
         equipo.map(url => `
         <div class="preview-item">
-            <img src="${url}">
+            <img src="${resolveAssetUrl(url)}">
             <button class="secondary action" onclick="deleteImage('equipo','${url}')">Eliminar</button>
         </div>`).join("");
 }
@@ -499,7 +516,7 @@ function renderGaleria(){
     document.getElementById("galeriaPreview").innerHTML =
         imgs.map(img=>`
         <div class="preview-item">
-            <img src="${img.url}">
+            <img src="${resolveAssetUrl(img.url)}">
             <div class="badge">${img.categoria}</div>
             <button class="secondary action" onclick="deleteImage('galeria','${img.url}')">Eliminar</button>
         </div>`).join("");
